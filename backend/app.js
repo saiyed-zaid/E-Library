@@ -15,12 +15,14 @@ const User = require("./models/Users");
 const authRouter = require("./routers/auth");
 const bookRouter = require("./routers/books.route");
 const planRouter = require("./routers/plans.route");
+const bookCategoryRouter = require("./routers/bookCategories.route");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(morgan("dev"));
 app.use(cors());
 
+app.use(bookCategoryRouter);
 app.use(authRouter);
 app.use(bookRouter);
 app.use(planRouter);
