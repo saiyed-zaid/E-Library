@@ -222,4 +222,30 @@ router.patch("/api/book/favourite", authCheck, async (req, res, next) => {
     res.status(500).json({ error: "Something Went Wrong..." });
   }
 });
+
+router.delete("/api/book/favourite", authCheck, async (req, res, next) => {
+  try {
+    const book = await Books.findById(new ObjectID(req.body.bookId));
+    const user = await Users.findById(new ObjectID(req.auth._id));
+
+    if (!book) {
+      return res.status(404).json({ error: "Book Not Found" });
+    }
+
+    const hasFavourite = user.favouriteBook.findIndex(
+      (book) => book._id === req.body.bookId
+    );
+
+    if (hasFavourite !== -1) {
+      user.favouriteBook.splice(hasFavourite, 1);
+
+      await user.save();
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: "Something Went Wrong..." });
+  }
+});
+
 module.exports = router;
