@@ -275,4 +275,29 @@ router.patch("/api/book/read-later", authCheck, async (req, res, next) => {
   }
 });
 
+router.delete("/api/book/read-later", authCheck, async (req, res, next) => {
+  try {
+    const book = await Books.findById(new ObjectID(req.body.bookId));
+    const user = await Users.findById(new ObjectID(req.auth._id));
+
+    if (!book) {
+      return res.status(404).json({ error: "Book Not Found" });
+    }
+
+    const hasReadLater = user.bookToReadLater.findIndex(
+      (book) => book._id === req.body.bookId
+    );
+
+    if (hasReadLater !== -1) {
+      user.bookToReadLater.splice(hasReadLater, 1);
+
+      await user.save();
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: "Something Went Wrong..." });
+  }
+});
+
 module.exports = router;
