@@ -162,7 +162,6 @@ router.post(
           email: userExists.email,
           role: userExists.role,
           photo: userExists.photo,
-          lastLoggedIn: Date.now(),
           token: token,
         },
       });

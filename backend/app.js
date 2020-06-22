@@ -14,6 +14,7 @@ const User = require("./models/Users");
 */
 const authRouter = require("./routers/auth");
 const bookRouter = require("./routers/books.route");
+const planRouter = require("./routers/plans.route");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -22,6 +23,7 @@ app.use(cors());
 
 app.use(authRouter);
 app.use(bookRouter);
+app.use(planRouter);
 
 mongoose
   .connect(process.env.MONGODB_URI, {
