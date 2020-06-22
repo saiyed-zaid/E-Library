@@ -7,7 +7,7 @@ const authCheck = require("../middlewares/authCheck");
 const hasAuthorization = require("../middlewares/hasAuthorization");
 
 const { body, validationResult } = require("express-validator");
-const { ObjectId } = require("mongodb");
+const { ObjectId, ObjectID } = require("mongodb");
 const { extend } = require("lodash");
 
 //return empty array when no books found
@@ -135,5 +135,26 @@ router.delete(
     }
   }
 );
+
+router.patch("/api/book/like", authCheck, async (req, res, next) => {
+  try {
+    const book = await Books.findById(new ObjectID(req.body.bookId));
+
+    if (!book) {
+      return res.status(404).json({ error: "Book Not Found" });
+    }
+
+    const hasLiked = book.likes.findIndex((like) => like._id === req.auth._id);
+
+    if (hasLiked === -1) {
+      book.likes.push({ _id: req.auth._id, created: Date.now() });
+      await book.save();
+    }
+
+    return res.status(200).json({ book });
+  } catch (error) {
+    res.status(500).json({ error: "Something Went Wrong..." });
+  }
+});
 
 module.exports = router;
