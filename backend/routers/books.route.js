@@ -144,10 +144,49 @@ router.patch("/api/book/like", authCheck, async (req, res, next) => {
       return res.status(404).json({ error: "Book Not Found" });
     }
 
+    const hasDisliked = book.dislikes.findIndex(
+      (dislike) => dislike._id === req.auth._id
+    );
+
+    if (hasDisliked !== -1) {
+      book.dislikes.splice(hasDisliked, 1);
+      await book.save();
+    }
+
     const hasLiked = book.likes.findIndex((like) => like._id === req.auth._id);
 
     if (hasLiked === -1) {
       book.likes.push({ _id: req.auth._id, created: Date.now() });
+      await book.save();
+    }
+
+    return res.status(200).json({ book });
+  } catch (error) {
+    res.status(500).json({ error: "Something Went Wrong..." });
+  }
+});
+
+router.patch("/api/book/dislike", authCheck, async (req, res, next) => {
+  try {
+    const book = await Books.findById(new ObjectID(req.body.bookId));
+
+    if (!book) {
+      return res.status(404).json({ error: "Book Not Found" });
+    }
+
+    const hasLiked = book.likes.findIndex((like) => like._id === req.auth._id);
+
+    if (hasLiked !== -1) {
+      book.likes.splice(hasLiked, 1);
+      await book.save();
+    }
+
+    const hasDisliked = book.dislikes.findIndex(
+      (dislike) => dislike._id === req.auth._id
+    );
+
+    if (hasDisliked === -1) {
+      book.dislikes.push({ _id: req.auth._id, created: Date.now() });
       await book.save();
     }
 
