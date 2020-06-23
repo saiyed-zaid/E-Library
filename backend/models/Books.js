@@ -19,7 +19,8 @@ const bookSchema = new Schema({
     required: true,
   },
   category: {
-    type: String,
+    type: ObjectId,
+    ref: "bookscategories",
     required: true,
   },
   reference: {
