@@ -11,16 +11,7 @@ import MyBooks from "./components/Books";
 import AddBook from "./components/Books/add";
 
 function App() {
-  const { Header } = Layout;
-
-  const layout = {
-    labelCol: {
-      span: 8,
-    },
-    wrapperCol: {
-      span: 8,
-    },
-  };
+  const { Header, Content } = Layout;
 
   const menu = (
     <Menu>
@@ -88,15 +79,29 @@ function App() {
               </Menu.Item>
             </Menu>
           </Header>
-          <Switch>
-            <Route exact path="/signup" component={Signup} />
-            <Route exact path="/signin" component={Signin} />
-            <Route exact path="/forget-password" component={ForgetPassword} />
-            <Route exact path="/reset-password" component={ResetPassword} />
-            <Route exact path="/dashboard" component={Dashboard} />
-            <Route exact path="/mybooks" component={MyBooks} />
-            <Route exact path="/add-book" component={AddBook} />
-          </Switch>
+          <Content
+            className="site-layout"
+            style={{ padding: "0 50px", marginTop: 10 }}
+          >
+            <div
+              className="site-layout-background"
+              style={{ padding: 10, minHeight: 380 }}
+            >
+              <Switch>
+                <Route exact path="/signup" component={Signup} />
+                <Route exact path="/signin" component={Signin} />
+                <Route
+                  exact
+                  path="/forget-password"
+                  component={ForgetPassword}
+                />
+                <Route exact path="/reset-password" component={ResetPassword} />
+                <Route exact path="/dashboard" component={Dashboard} />
+                <Route exact path="/mybooks" component={MyBooks} />
+                <Route exact path="/add-book" component={AddBook} />
+              </Switch>
+            </div>
+          </Content>
         </Router>
       </Layout>
     </div>
