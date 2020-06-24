@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
-const md5 = require("md5");
 var _ = require("lodash");
+const bcrypt = require("bcrypt");
+const md5 = require("md5");
+
 const mailer = require("../helper/mailer");
 const User = require("../models/Users");
 const { ObjectId } = require("mongodb");
@@ -59,7 +61,10 @@ router.post(
 
       verificationCode = md5(new Date().getTime()).substr(0, 6);
       req.body.verificationCode = verificationCode;
-      req.body.password = md5(req.body.password);
+
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+      req.body.password = hashedPassword;
 
       mailer({
         from: "zss@narola.email",
@@ -121,15 +126,23 @@ router.post(
               },
             ],
           },
-          {
-            password: md5(req.body.password),
-          },
         ],
       });
 
       if (!userExists) {
         return res.status(402).json({
           error: "Username or Password is Incorrect..",
+        });
+      }
+
+      const match = await bcrypt.compare(
+        req.body.password,
+        userExists.password
+      );
+
+      if (!match) {
+        return res.status(402).json({
+          error: "Password is Incorrect..",
         });
       }
 
