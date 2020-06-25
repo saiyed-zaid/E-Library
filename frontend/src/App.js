@@ -9,8 +9,10 @@ import ResetPassword from "./components/Reset-Password";
 import Dashboard from "./components/Dashboard";
 import MyBooks from "./components/Books";
 import AddBook from "./components/Books/add";
+import store from "./redux/store";
+import { Provider } from "react-redux";
 
-function App() {
+function AppRouter() {
   const { Header, Content } = Layout;
 
   const menu = (
@@ -107,5 +109,13 @@ function App() {
     </div>
   );
 }
+
+const App = () => {
+  return (
+    <Provider store={store}>
+      <AppRouter />
+    </Provider>
+  );
+};
 
 export default App;

@@ -46,11 +46,3 @@ Search in library: (for reader)
 https://medium.com/authpack/facebook-auth-with-node-js-c4bb90d03fc0
 
 http://www.passportjs.org/docs/login/
-
-
-
-
-MultiStep Signup Form
-Login 
-Proper Container
-menu

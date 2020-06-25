@@ -41,7 +41,7 @@ const userSchema = new Schema({
   },
   interest: {
     type: Array,
-    ref: "BooksCategories",
+    ref: "bookscategories",
   },
   plan: {
     type: String,

@@ -80,6 +80,7 @@ router.post(
 
       return res.status(201).json({
         message: "Please check Your mail for further instruction.",
+        user,
       });
     } catch (error) {
       console.log(error);
@@ -130,7 +131,7 @@ router.post(
       });
 
       if (!userExists) {
-        return res.status(402).json({
+        return res.status(401).json({
           error: "Username or Password is Incorrect..",
         });
       }
@@ -141,13 +142,13 @@ router.post(
       );
 
       if (!match) {
-        return res.status(402).json({
+        return res.status(401).json({
           error: "Password is Incorrect..",
         });
       }
 
       if (!userExists.isVerified) {
-        return res.status(402).json({
+        return res.status(401).json({
           error: "Your Account isn't verified.",
           isVerified: false,
         });

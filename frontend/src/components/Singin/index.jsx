@@ -1,13 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Layout, Form, Input, Button, Checkbox } from "antd";
+import { Alert, Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { connect } from "react-redux";
 
-const Signin = () => {
-  const { Content } = Layout;
-  const onFinish = (values) => {
-    console.log("Received values of form: ", values);
+import { signin } from "../../redux/ActionApi";
+
+const Signin = (props) => {
+  const onHandleSubmit = async (values) => {
+    const response = await props.signinDispatch(values);
+
+    if (response) {
+      props.history.push("/dashboard");
+    }
   };
+
   const layout = {
     labelCol: {
       span: 8,
@@ -16,15 +23,26 @@ const Signin = () => {
       span: 8,
     },
   };
+
   return (
     <>
       <h1>Signin</h1>
+      {props.error && (
+        <Alert
+          message="Oops!"
+          description={props.error}
+          type="warning"
+          showIcon
+          closable
+          style={{ width: "26rem", margin: "5px 0" }}
+        />
+      )}
 
       <Form
         name="normal_login"
         className="login-form"
         initialValues={{ remember: true }}
-        onFinish={onFinish}
+        onFinish={onHandleSubmit}
         {...layout}
       >
         <Form.Item
@@ -61,6 +79,7 @@ const Signin = () => {
             type="primary"
             htmlType="submit"
             className="login-form-button"
+            loading={props.loading}
           >
             Log in
           </Button>
@@ -71,4 +90,14 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+const mapStateToProps = (state) => {
+  return state;
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    signinDispatch: (postData) => dispatch(signin(postData)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signin);
