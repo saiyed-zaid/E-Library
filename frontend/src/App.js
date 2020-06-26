@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import { Layout, Menu, Avatar, Dropdown } from "antd";
 
@@ -9,10 +9,21 @@ import ResetPassword from "./components/Reset-Password";
 import Dashboard from "./components/Dashboard";
 import MyBooks from "./components/Books";
 import AddBook from "./components/Books/add";
-import store from "./redux/store";
-import { Provider } from "react-redux";
+import ErrorPage from "./components/ErrorPages/404";
 
-function AppRouter() {
+import store from "./redux/store";
+import { Provider, connect } from "react-redux";
+
+import { GET } from "./redux/actions/userActions";
+
+function AppRouter(props) {
+  const isLoggedIn = window.localStorage.getItem("authUser") ? true : false;
+  var authUser;
+
+  useEffect(() => {
+    props.getAuthUser();
+  }, []);
+
   const { Header, Content } = Layout;
 
   const menu = (
@@ -39,6 +50,7 @@ function AppRouter() {
       <Menu.Item danger>Logout</Menu.Item>
     </Menu>
   );
+
   return (
     <div>
       <Layout>
@@ -62,23 +74,33 @@ function AppRouter() {
               <Menu.Item>
                 <Link to="/mybooks">My Books</Link>
               </Menu.Item>
-              <Menu.Item key="1">
-                <Link to="/signup">Signup</Link>
-              </Menu.Item>
-              <Menu.Item key="2">
-                <Link to="/signin">Login</Link>
-              </Menu.Item>
-              <Menu.Item key="3">
-                <Dropdown overlay={menu}>
-                  <Avatar
-                    style={{ verticalAlign: "middle" }}
-                    size="small"
-                    gap={1}
-                  >
-                    ZSS
-                  </Avatar>
-                </Dropdown>
-              </Menu.Item>
+
+              {isLoggedIn && (
+                <Menu.Item key="3">
+                  <Dropdown overlay={menu}>
+                    <Avatar
+                      style={{ verticalAlign: "middle" }}
+                      size="small"
+                      gap={1}
+                    >
+                      {props.authUser.authUser.user &&
+                        props.authUser.authUser.user.email}
+                    </Avatar>
+                  </Dropdown>
+                </Menu.Item>
+              )}
+
+              {!isLoggedIn && (
+                <Menu.Item key="1">
+                  <Link to="/signup">Signup</Link>
+                </Menu.Item>
+              )}
+
+              {!isLoggedIn && (
+                <Menu.Item key="2">
+                  <Link to="/signin">Login</Link>
+                </Menu.Item>
+              )}
             </Menu>
           </Header>
           <Content
@@ -101,6 +123,7 @@ function AppRouter() {
                 <Route exact path="/dashboard" component={Dashboard} />
                 <Route exact path="/mybooks" component={MyBooks} />
                 <Route exact path="/add-book" component={AddBook} />
+                <Route path="*" component={ErrorPage} />
               </Switch>
             </div>
           </Content>
@@ -110,10 +133,24 @@ function AppRouter() {
   );
 }
 
+const mapStateToProps = ({ authUser }) => {
+  return {
+    authUser,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getAuthUser: () => dispatch(GET()),
+  };
+};
+
+const MainComponent = connect(mapStateToProps, mapDispatchToProps)(AppRouter);
+
 const App = () => {
   return (
     <Provider store={store}>
-      <AppRouter />
+      <MainComponent />
     </Provider>
   );
 };

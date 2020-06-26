@@ -13,9 +13,17 @@ const Add = () => {
         <Form.Item
           name="title"
           label="Title"
-          rules={[{ required: true, message: "Please input your title!" }]}
+          rules={[{ required: true, message: "Please input title!" }]}
         >
           <Input />
+        </Form.Item>
+
+        <Form.Item
+          name="description"
+          label="Description"
+          rules={[{ required: true, message: "Please input description!" }]}
+        >
+          <Input.TextArea />
         </Form.Item>
 
         <Form.Item>

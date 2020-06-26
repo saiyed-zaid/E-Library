@@ -1,5 +1,6 @@
 import Axios from "axios";
 import { loader, login, failure, success } from "./actions/userActions";
+import { GET,LOADING } from "./actions/BookActions";
 //API RELATED METHODS
 export const signup = (postData) => {
   return async (dispatch) => {
@@ -54,3 +55,31 @@ export const signin = (postData) => {
     }
   };
 };
+
+export const fetchAuthorBooks = (data) => {
+  
+  return async (dispatch) => {
+    //LOADING
+    try {
+      dispatch(LOADING());
+      const response = await Axios.get(
+        `${process.env.REACT_APP_BACKEND_URI}/books/author/${data._id}`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${data.token}`,
+          },
+        }
+      );
+      //SUCCESS
+      dispatch(GET(response.data.books));
+    } catch (error) {
+      //ERROR
+    }
+  };
+};
+/*
+//deleteData()
+//InsertData()
+//FetchData()
+*/
