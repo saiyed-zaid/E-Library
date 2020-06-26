@@ -9,6 +9,7 @@ import ResetPassword from "./components/Reset-Password";
 import Dashboard from "./components/Dashboard";
 import MyBooks from "./components/Books";
 import AddBook from "./components/Books/add";
+import EditBook from "./components/Books/edit";
 import ErrorPage from "./components/ErrorPages/404";
 
 import store from "./redux/store";
@@ -65,15 +66,23 @@ function AppRouter(props) {
               defaultSelectedKeys={["2"]}
               style={{ textAlign: "right" }}
             >
-              <Menu.Item>
-                <Link to="/dashboard">Dashboard</Link>
-              </Menu.Item>
-              <Menu.Item>
-                <Link to="/add-book">Add Book</Link>
-              </Menu.Item>
-              <Menu.Item>
-                <Link to="/mybooks">My Books</Link>
-              </Menu.Item>
+              {isLoggedIn && (
+                <Menu.Item>
+                  <Link to="/dashboard">Dashboard</Link>
+                </Menu.Item>
+              )}
+
+              {isLoggedIn && (
+                <Menu.Item>
+                  <Link to="/add-book">Add Book</Link>
+                </Menu.Item>
+              )}
+
+              {isLoggedIn && (
+                <Menu.Item>
+                  <Link to="/mybooks">My Books</Link>
+                </Menu.Item>
+              )}
 
               {isLoggedIn && (
                 <Menu.Item key="3">
@@ -113,16 +122,24 @@ function AppRouter(props) {
             >
               <Switch>
                 <Route exact path="/signup" component={Signup} />
+
                 <Route exact path="/signin" component={Signin} />
+
                 <Route
                   exact
                   path="/forget-password"
                   component={ForgetPassword}
                 />
+
                 <Route exact path="/reset-password" component={ResetPassword} />
                 <Route exact path="/dashboard" component={Dashboard} />
+
                 <Route exact path="/mybooks" component={MyBooks} />
+
                 <Route exact path="/add-book" component={AddBook} />
+
+                <Route exact path="/edit-book/:bookId" component={EditBook} />
+
                 <Route path="*" component={ErrorPage} />
               </Switch>
             </div>

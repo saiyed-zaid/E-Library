@@ -5,10 +5,9 @@ export const GET = (data) => {
   };
 };
 
-export const INSERT = (data) => {
+export const INSERT = () => {
   return {
     type: "INSERT",
-    payload: data,
   };
 };
 

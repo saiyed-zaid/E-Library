@@ -54,7 +54,7 @@ router.post(
   [
     body("title").notEmpty().withMessage("Title is Required"),
     body("description").notEmpty().withMessage("Description is required"),
-    body("author").notEmpty().withMessage("Author is required"),
+    /* body("author").notEmpty().withMessage("Author is required"), */
     body("category").notEmpty().withMessage("Categpry is required"),
     body("reference").notEmpty().withMessage("Reference is required"),
     body("pages").notEmpty().withMessage("Pages is required"),
@@ -124,7 +124,7 @@ router.delete(
       const book = Books.findById(new ObjectId(req.params.bookId));
 
       if (!book) {
-        return res.status(402).json({ error: "Book Not Found" });
+        return res.status(404).json({ error: "Book Not Found" });
       }
 
       await book.deleteOne();

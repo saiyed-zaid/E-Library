@@ -1,6 +1,6 @@
 import Axios from "axios";
 import { loader, login, failure, success } from "./actions/userActions";
-import { GET,LOADING } from "./actions/BookActions";
+import { GET, LOADING, INSERT, DELETE } from "./actions/BookActions";
 //API RELATED METHODS
 export const signup = (postData) => {
   return async (dispatch) => {
@@ -57,7 +57,6 @@ export const signin = (postData) => {
 };
 
 export const fetchAuthorBooks = (data) => {
-  
   return async (dispatch) => {
     //LOADING
     try {
@@ -78,8 +77,76 @@ export const fetchAuthorBooks = (data) => {
     }
   };
 };
-/*
-//deleteData()
-//InsertData()
-//FetchData()
-*/
+
+export const insertData = (data, token, _id) => {
+  return async (dispatch) => {
+    try {
+      //LOADING
+      //SUCCESS
+      //dispatch(LOADING());
+      const response = await Axios.post(
+        `${process.env.REACT_APP_BACKEND_URI}/book/${_id}`,
+        data,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      dispatch(INSERT());
+      return true;
+    } catch (error) {
+      //FAilure
+    }
+  };
+};
+
+export const deleteData = (deleteId, _id, token) => {
+  //alert("delete : " + deleteId + "id: " + _id);
+
+  return async (dispatch) => {
+    try {
+      //LOADING
+      const response = await Axios.delete(
+        `${process.env.REACT_APP_BACKEND_URI}/books/${deleteId}`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      dispatch(fetchAuthorBooks({ _id, token }));
+      return true;
+      //SUCCESS
+    } catch (error) {
+      //FAILURE
+    }
+  };
+};
+
+export const updateData = (data, updateId, _id, token) => {
+  return async (dispatch) => {
+    try {
+      //LOADING
+      const book = await Axios.patch(
+        `${process.env.REACT_APP_BACKEND_URI}/books/${updateId}`,
+        data,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      dispatch(fetchAuthorBooks({ _id, token }));
+      return true;
+
+      //SUCCESS
+    } catch (error) {
+      //FAILURE
+    }
+  };
+};

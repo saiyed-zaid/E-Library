@@ -1,29 +1,40 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { insertData } from "../../redux/ActionApi";
+import { updateData } from "../../redux/ActionApi";
 
 import { PageHeader, Button, Form, Radio, Input, Select, Upload } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 
-const Add = (props) => {
+const Edit = (props) => {
+  const dispatch = useDispatch();
+
   const authUser = useSelector((state) => state.authUser.authUser);
 
-  const dispatch = useDispatch();
+  const books = useSelector((state) => {
+    return state.books.books;
+  });
+
+  const book = books.filter((book) => book._id === props.match.params.bookId);
 
   const { Dragger } = Upload;
 
   const handleSubmit = (data) => {
     const response = dispatch(
-      insertData(data, authUser.user.token, authUser.user._id)
+      updateData(
+        data,
+        props.match.params.bookId,
+        authUser.user._id,
+        authUser.user.token
+      )
     );
-    
+
     response && props.history.push("/mybooks");
   };
   return (
     <>
       <div className="site-page-header-ghost-wrapper">
-        <PageHeader ghost={false} title="Add book"></PageHeader>
+        <PageHeader ghost={false} title="Edit book"></PageHeader>
       </div>
 
       <Form layout="vertical" onFinish={handleSubmit}>
@@ -31,6 +42,7 @@ const Add = (props) => {
           name="title"
           label="Title"
           rules={[{ required: true, message: "Please input title!" }]}
+          initialValue={book[0] && book[0].title}
         >
           <Input />
         </Form.Item>
@@ -39,6 +51,7 @@ const Add = (props) => {
           name="description"
           label="Description"
           rules={[{ required: true, message: "Please input description!" }]}
+          initialValue={book[0] && book[0].description}
         >
           <Input.TextArea />
         </Form.Item>
@@ -47,6 +60,7 @@ const Add = (props) => {
           name="photo"
           label="Photo"
           rules={[{ required: true, message: "Please input photo!" }]}
+          initialValue={book[0] && book[0].photo}
         >
           <Input value="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
         </Form.Item>
@@ -81,6 +95,7 @@ const Add = (props) => {
           name="pages"
           label="Number of pages"
           rules={[{ required: true, message: "Please input your book pages!" }]}
+          initialValue={book[0] && book[0].pages}
         >
           <Input />
         </Form.Item>
@@ -91,6 +106,7 @@ const Add = (props) => {
           rules={[
             { required: true, message: "Please input your book reference!" },
           ]}
+          initialValue={book[0] && book[0].reference}
         >
           <Input />
         </Form.Item>
@@ -101,8 +117,12 @@ const Add = (props) => {
           rules={[{ required: true, message: "Please select event!" }]}
         >
           <Radio.Group>
-            <Radio value="1">Yes</Radio>
-            <Radio value="0">No</Radio>
+            <Radio value="1" checked={book[0] && book[0].isOnTrueEvent}>
+              Yes
+            </Radio>
+            <Radio value="0" checked={book[0] && book[0].isOnTrueEvent}>
+              No
+            </Radio>
           </Radio.Group>
         </Form.Item>
 
@@ -116,4 +136,4 @@ const Add = (props) => {
   );
 };
 
-export default Add;
+export default Edit;

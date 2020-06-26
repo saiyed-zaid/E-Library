@@ -7,8 +7,12 @@ import {
   LikeOutlined,
 } from "@ant-design/icons";
 
-export default function Dashboard() {
+export default function Dashboard(props) {
   const { Content } = Layout;
+
+  const isLoggedIn = window.localStorage.getItem("authUser") ? true : false;
+
+  !isLoggedIn && props.history.push("/signin");
 
   const layout = {
     labelCol: {

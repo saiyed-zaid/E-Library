@@ -10,9 +10,7 @@ const Signin = (props) => {
   const onHandleSubmit = async (values) => {
     const response = await props.signinDispatch(values);
 
-    if (response) {
-      props.history.push("/dashboard");
-    }
+    response && props.history.push("/dashboard");
   };
 
   const layout = {

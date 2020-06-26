@@ -2,15 +2,29 @@ import React, { useEffect } from "react";
 import { Row, Col, Card, PageHeader, Button, Popconfirm, Avatar } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 
-import { fetchAuthorBooks } from "../../redux/ActionApi";
+import { fetchAuthorBooks, deleteData } from "../../redux/ActionApi";
 
 const { Meta } = Card;
+
 const MyBooks = (props) => {
+  const dispatch = useDispatch();
+
   useEffect(() => {
     props.fetchBooks(props.authUser);
   }, []);
+
+  const handleDelete = (_id) => {
+    const response = dispatch(
+      deleteData(_id, props.authUser._id, props.authUser.token)
+    );
+  };
+
+  const handleEdit = (_id) => {
+    props.history.push(`/edit-book/${_id}`);
+  };
+
   return (
     <>
       <div className="site-page-header-ghost-wrapper">
@@ -28,7 +42,7 @@ const MyBooks = (props) => {
           ]}
         ></PageHeader>
       </div>
-      
+
       <Row gutter={[16, 16]}>
         {props.books.loading && (
           <Col xs={24} md={4}>
@@ -56,11 +70,15 @@ const MyBooks = (props) => {
                   />
                 }
                 actions={[
-                  <EditOutlined key="edit" />,
+                  <EditOutlined
+                    key="edit"
+                    onClick={() => handleEdit(book._id)}
+                  />,
                   <Popconfirm
                     title="Are you sure？"
                     okText="Yes"
                     cancelText="No"
+                    onConfirm={() => handleDelete(book._id)}
                   >
                     <Popconfirm
                       title="Are you sure？"
