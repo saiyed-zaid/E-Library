@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Card, Space, Layout, Statistic } from "antd";
+import { Row, Col, Card, Layout, Statistic } from "antd";
 import {
   LikeTwoTone,
   DislikeTwoTone,
@@ -39,19 +39,19 @@ export default function Dashboard(props) {
               }
             >
               <p>Cosos Theory</p>
-              <Row gutter={16}>
-                <Col>
+              <Row gutter={24}>
+                <Col span={8}>
                   <Statistic
                     title="Read"
                     value={125}
                     prefix={<BookTwoTone />}
                   />
                 </Col>
-                <Col>
+                <Col span={8}>
                   <Statistic title="Like" value={67} prefix={<LikeTwoTone />} />
                 </Col>
 
-                <Col>
+                <Col span={8}>
                   <Statistic
                     title="Dislike"
                     value={12}
@@ -72,19 +72,19 @@ export default function Dashboard(props) {
               }
             >
               <p>Cosos Theory</p>
-              <Row gutter={16}>
-                <Col>
+              <Row gutter={24}>
+                <Col span={8}>
                   <Statistic
                     title="Read"
                     value={125}
                     prefix={<BookTwoTone />}
                   />
                 </Col>
-                <Col>
+                <Col span={8}>
                   <Statistic title="Like" value={67} prefix={<LikeTwoTone />} />
                 </Col>
 
-                <Col>
+                <Col span={8}>
                   <Statistic
                     title="Dislike"
                     value={12}
@@ -105,19 +105,19 @@ export default function Dashboard(props) {
               }
             >
               <p>Cosos Theory</p>
-              <Row gutter={16}>
-                <Col>
+              <Row gutter={24}>
+                <Col span={8}>
                   <Statistic
                     title="Read"
                     value={125}
                     prefix={<BookTwoTone />}
                   />
                 </Col>
-                <Col>
+                <Col span={8}>
                   <Statistic title="Like" value={67} prefix={<LikeTwoTone />} />
                 </Col>
 
-                <Col>
+                <Col span={8}>
                   <Statistic
                     title="Dislike"
                     value={12}
@@ -143,19 +143,19 @@ export default function Dashboard(props) {
               }
             >
               <p>Cosos Theory</p>
-              <Row gutter={16}>
-                <Col>
+              <Row gutter={24}>
+                <Col span={8}>
                   <Statistic
                     title="Read"
                     value={125}
                     prefix={<BookTwoTone />}
                   />
                 </Col>
-                <Col>
+                <Col span={8}>
                   <Statistic title="Like" value={67} prefix={<LikeTwoTone />} />
                 </Col>
 
-                <Col>
+                <Col span={8}>
                   <Statistic
                     title="Dislike"
                     value={12}
@@ -176,19 +176,19 @@ export default function Dashboard(props) {
               }
             >
               <p>Cosos Theory</p>
-              <Row gutter={16}>
-                <Col>
+              <Row gutter={24}>
+                <Col span={8}>
                   <Statistic
                     title="Read"
                     value={125}
                     prefix={<BookTwoTone />}
                   />
                 </Col>
-                <Col>
+                <Col span={8}>
                   <Statistic title="Like" value={67} prefix={<LikeTwoTone />} />
                 </Col>
 
-                <Col>
+                <Col span={8}>
                   <Statistic
                     title="Dislike"
                     value={12}
@@ -209,19 +209,19 @@ export default function Dashboard(props) {
               }
             >
               <p>Cosos Theory</p>
-              <Row gutter={16}>
-                <Col>
+              <Row gutter={24}>
+                <Col span={8}>
                   <Statistic
                     title="Read"
                     value={125}
                     prefix={<BookTwoTone />}
                   />
                 </Col>
-                <Col>
+                <Col span={8}>
                   <Statistic title="Like" value={67} prefix={<LikeTwoTone />} />
                 </Col>
 
-                <Col>
+                <Col span={8}>
                   <Statistic
                     title="Dislike"
                     value={12}

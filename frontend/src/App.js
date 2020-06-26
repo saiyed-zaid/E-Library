@@ -6,10 +6,13 @@ import Signup from "./components/Singup";
 import Signin from "./components/Singin";
 import ForgetPassword from "./components/forget-password";
 import ResetPassword from "./components/Reset-Password";
-import Dashboard from "./components/Dashboard";
+import Writer from "./components/Dashboard/writer";
+import Reader from "./components/Dashboard/reader";
 import MyBooks from "./components/Books";
+import Book from "./components/Books/book";
 import AddBook from "./components/Books/add";
 import EditBook from "./components/Books/edit";
+import Search from "./components/Search";
 import ErrorPage from "./components/ErrorPages/404";
 
 import store from "./redux/store";
@@ -19,7 +22,6 @@ import { GET } from "./redux/actions/userActions";
 
 function AppRouter(props) {
   const isLoggedIn = window.localStorage.getItem("authUser") ? true : false;
-  var authUser;
 
   useEffect(() => {
     props.getAuthUser();
@@ -84,6 +86,10 @@ function AppRouter(props) {
                 </Menu.Item>
               )}
 
+              <Menu.Item>
+                <Link to="/search">Search</Link>
+              </Menu.Item>
+
               {isLoggedIn && (
                 <Menu.Item key="3">
                   <Dropdown overlay={menu}>
@@ -132,13 +138,31 @@ function AppRouter(props) {
                 />
 
                 <Route exact path="/reset-password" component={ResetPassword} />
-                <Route exact path="/dashboard" component={Dashboard} />
+
+                <Route
+                  exact
+                  path="/dashboard"
+                  render={() => {
+                    //alert(props.authUser.authUser.user.role);
+                    if (props.authUser.authUser.user.role === "writer") {
+                      return <Writer />;
+                    } else if (props.authUser.authUser.user.role === "reader") {
+                      return <Reader />;
+                    } else {
+                      return <Signin />;
+                    }
+                  }}
+                />
 
                 <Route exact path="/mybooks" component={MyBooks} />
 
                 <Route exact path="/add-book" component={AddBook} />
 
                 <Route exact path="/edit-book/:bookId" component={EditBook} />
+
+                <Route exact path="/book/:bookId" component={Book} />
+
+                <Route exact path="/search" component={Search} />
 
                 <Route path="*" component={ErrorPage} />
               </Switch>

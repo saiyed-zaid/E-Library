@@ -1,5 +1,5 @@
 const initState = {
-  authUser: {},
+  authUser: JSON.parse(window.localStorage.getItem("authUser")),
 };
 export const userReducer = (state = initState, action) => {
   switch (action.type) {
@@ -16,7 +16,7 @@ export const userReducer = (state = initState, action) => {
       return {
         authUser,
       };
-      
+
     case "LOADING":
       return { ...state, loading: true };
 
