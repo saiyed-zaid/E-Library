@@ -5,6 +5,29 @@ export const GET = (data) => {
   };
 };
 
+export const GETALLBOOKS = (data) => {
+  return {
+    type: "GETALLBOOKS",
+    payload: data,
+  };
+};
+
+export const GETALLCATEGORIES = (data) => {
+  return {
+    type: "GETALLCATEGORIES",
+    payload: data,
+  };
+};
+
+export const GETAUTHORS = (data) => {
+  return {
+    type: "GETAUTHORS",
+    payload: data,
+  };
+};
+
+
+
 export const INSERT = () => {
   return {
     type: "INSERT",

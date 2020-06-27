@@ -13,9 +13,27 @@ const { extend } = require("lodash");
 //return empty array when no books found
 router.get("/api/books", async (req, res, next) => {
   try {
-    const books = await Books.find({ status: true });
-
+    const books = await Books.find({ status: true }).populate(
+      "category",
+      "name"
+    );
     return res.status(200).json({ books });
+  } catch (error) {
+    res.status(500).json({ error: "Something Went Wrong..." });
+  }
+});
+
+//return empty array when no books found
+router.get("/api/book/authors", async (req, res, next) => {
+  try {
+    const authors = await Users.find(
+      {
+        role: "writer",
+        isVerified: true,
+      },
+      { firstname: 1, _id: 1 }
+    );
+    return res.status(200).json({ authors });
   } catch (error) {
     res.status(500).json({ error: "Something Went Wrong..." });
   }

@@ -1,6 +1,15 @@
 import Axios from "axios";
 import { loader, login, failure } from "./actions/userActions";
-import { GET, LOADING, INSERT, DELETE,SUCCESS } from "./actions/BookActions";
+import {
+  GET,
+  LOADING,
+  INSERT,
+  DELETE,
+  SUCCESS,
+  GETALLBOOKS,
+  GETALLCATEGORIES,
+  GETAUTHORS,
+} from "./actions/BookActions";
 //API RELATED METHODS
 export const signup = (postData) => {
   return async (dispatch) => {
@@ -73,6 +82,54 @@ export const fetchAuthorBooks = (data) => {
       );
       //SUCCESS
       dispatch(GET(response.data.books));
+    } catch (error) {
+      //ERROR
+    }
+  };
+};
+
+export const fetchBooks = () => {
+  return async (dispatch) => {
+    //LOADING
+    try {
+      //dispatch(LOADING());
+      const response = await Axios.get(
+        `${process.env.REACT_APP_BACKEND_URI}/books`
+      );
+      //SUCCESS
+      dispatch(GETALLBOOKS(response.data.books));
+    } catch (error) {
+      //ERROR
+    }
+  };
+};
+
+export const fetchCategories = () => {
+  return async (dispatch) => {
+    //LOADING
+    try {
+      //dispatch(LOADING());
+      const response = await Axios.get(
+        `${process.env.REACT_APP_BACKEND_URI}/book/categories`
+      );
+      //SUCCESS
+      dispatch(GETALLCATEGORIES(response.data.categories));
+    } catch (error) {
+      //ERROR
+    }
+  };
+};
+
+export const fetchAuthors = () => {
+  return async (dispatch) => {
+    //LOADING
+    try {
+      //dispatch(LOADING());
+      const response = await Axios.get(
+        `${process.env.REACT_APP_BACKEND_URI}/book/authors`
+      );
+      //SUCCESS
+      dispatch(GETAUTHORS(response.data.authors));
     } catch (error) {
       //ERROR
     }

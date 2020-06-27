@@ -19,9 +19,9 @@ router.post("/api/book/categories", async (req, res, next) => {
 
 router.get("/api/book/categories", async (req, res, next) => {
   try {
-    const books = await BookCategory.find({}, { __v: 0 });
+    const categories = await BookCategory.find({}, { __v: 0 });
 
-    return res.status(200).json({ books });
+    return res.status(200).json({ categories });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Something Went Wrong..." });
