@@ -8,9 +8,12 @@ import { signin } from "../../redux/ActionApi";
 
 const Signin = (props) => {
   const onHandleSubmit = async (values) => {
-    const response = await props.signinDispatch(values);
+    try {
+      const response = await props.signinDispatch(values);
 
-    response && props.history.push("/dashboard");
+      response && props.history.push("/dashboard");
+      
+    } catch (error) {}
   };
 
   const layout = {

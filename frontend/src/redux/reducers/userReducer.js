@@ -1,13 +1,26 @@
 const initState = {
-  authUser: JSON.parse(window.localStorage.getItem("authUser")),
+  authUser: window.localStorage.getItem("authUser")
+    ? JSON.parse(window.localStorage.getItem("authUser"))
+    : {},
+  loading: false,
 };
+
 export const userReducer = (state = initState, action) => {
   switch (action.type) {
     case "LOGIN":
       window.localStorage.setItem("authUser", JSON.stringify(action.payload));
       return {
         ...state,
-        authuser: action.payload,
+        authUser: action.payload,
+        loading: false,
+      };
+
+    case "LOGOUT":
+      window.localStorage.setItem("authUser", JSON.stringify({}));
+      window.localStorage.removeItem("authUser");
+      return {
+        ...state,
+        authUser: {},
         loading: false,
       };
 

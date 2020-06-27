@@ -11,11 +11,17 @@ export const login = (data) => {
   };
 };
 
-export const GET = () =>{
-    return {
-        type: "GET"
-    }
-}
+export const Logout = () => {
+  return {
+    type: "LOGOUT",
+  };
+};
+
+export const GET = () => {
+  return {
+    type: "GET",
+  };
+};
 
 export const loader = () => {
   return {

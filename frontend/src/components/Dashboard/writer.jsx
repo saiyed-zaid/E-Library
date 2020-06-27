@@ -6,9 +6,11 @@ import {
   BookTwoTone,
   LikeOutlined,
 } from "@ant-design/icons";
+import { withRouter } from "react-router-dom";
 
-export default function Dashboard(props) {
+const Dashboard = (props) => {
   const { Content } = Layout;
+  console.log("Dash props", props);
 
   const isLoggedIn = window.localStorage.getItem("authUser") ? true : false;
 
@@ -235,4 +237,5 @@ export default function Dashboard(props) {
       </div>
     </>
   );
-}
+};
+export default withRouter(Dashboard);

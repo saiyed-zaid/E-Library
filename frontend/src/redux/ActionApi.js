@@ -1,6 +1,6 @@
 import Axios from "axios";
-import { loader, login, failure, success } from "./actions/userActions";
-import { GET, LOADING, INSERT, DELETE } from "./actions/BookActions";
+import { loader, login, failure } from "./actions/userActions";
+import { GET, LOADING, INSERT, DELETE,SUCCESS } from "./actions/BookActions";
 //API RELATED METHODS
 export const signup = (postData) => {
   return async (dispatch) => {
@@ -12,7 +12,7 @@ export const signup = (postData) => {
       postData
     );
 
-    dispatch(success(response.data));
+    dispatch(SUCCESS(response.data));
     //Dispatch success
 
     console.log("asd", response);
@@ -29,7 +29,7 @@ export const verifyAccount = (postData) => {
       postData
     );
 
-    dispatch(success(response.data));
+    dispatch(SUCCESS(response.data));
 
     console.log("verification response", response);
   };
@@ -38,7 +38,7 @@ export const verifyAccount = (postData) => {
 export const signin = (postData) => {
   return async (dispatch) => {
     try {
-      dispatch(loader());
+      //dispatch(LOADING());
 
       const response = await Axios.post(
         `${process.env.REACT_APP_BACKEND_URI}/signin`,
@@ -46,6 +46,7 @@ export const signin = (postData) => {
       );
 
       dispatch(login(response.data));
+      //dispatch(SUCCESS());
 
       return true;
     } catch (error) {
@@ -60,7 +61,7 @@ export const fetchAuthorBooks = (data) => {
   return async (dispatch) => {
     //LOADING
     try {
-      dispatch(LOADING());
+      //dispatch(LOADING());
       const response = await Axios.get(
         `${process.env.REACT_APP_BACKEND_URI}/books/author/${data._id}`,
         {
