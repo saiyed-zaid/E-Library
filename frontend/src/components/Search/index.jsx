@@ -40,8 +40,6 @@ const SearchBooks = (props) => {
   const categories = useSelector((state) => state.books.categories);
   const authors = useSelector((state) => state.books.authors);
 
-  console.log("author", authors);
-
   useEffect(() => {
     dispatch(fetchBooks());
     dispatch(fetchCategories());
@@ -90,6 +88,10 @@ const SearchBooks = (props) => {
 
   const handleAuthorFilter = (e) => {
     setFilteredAuthor(e);
+  };
+
+  const handleBookView = (_id) => {
+    props.history.push(`/book/${_id}`);
   };
 
   return (
@@ -175,7 +177,10 @@ const SearchBooks = (props) => {
                     <p>{book.description}</p>
                   </Col>
                   <Col span={5}>
-                    <InfoCircleOutlined style={{ cursor: "pointer" }} />
+                    <InfoCircleOutlined
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleBookView(book._id)}
+                    />
                   </Col>
                 </Row>
               </Card>

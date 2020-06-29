@@ -154,6 +154,27 @@ router.delete(
   }
 );
 
+router.patch("/api/book/comment", authCheck, async (req, res, next) => {
+  try {
+    const book = await Books.findById(new ObjectID(req.body.bookId));
+
+    if (!book) {
+      return res.status(404).json({ error: "Book Not Found" });
+    }
+
+    book.comments.push({
+      postedBy: req.auth._id,
+      created: Date.now(),
+      text: req.body.comment,
+    });
+    await book.save();
+
+    return res.status(200).json({ book });
+  } catch (error) {
+    res.status(500).json({ error: "Something Went Wrong..." });
+  }
+});
+
 router.patch("/api/book/like", authCheck, async (req, res, next) => {
   try {
     const book = await Books.findById(new ObjectID(req.body.bookId));
@@ -175,8 +196,11 @@ router.patch("/api/book/like", authCheck, async (req, res, next) => {
 
     if (hasLiked === -1) {
       book.likes.push({ _id: req.auth._id, created: Date.now() });
-      await book.save();
+    } else {
+      book.likes.splice(hasLiked, 1);
     }
+
+    await book.save();
 
     return res.status(200).json({ book });
   } catch (error) {
@@ -205,8 +229,10 @@ router.patch("/api/book/dislike", authCheck, async (req, res, next) => {
 
     if (hasDisliked === -1) {
       book.dislikes.push({ _id: req.auth._id, created: Date.now() });
-      await book.save();
+    } else {
+      book.dislikes.splice(hasDisliked, 1);
     }
+    await book.save();
 
     return res.status(200).json({ book });
   } catch (error) {
@@ -232,8 +258,13 @@ router.patch("/api/book/favourite", authCheck, async (req, res, next) => {
         _id: req.body.bookId,
       });
 
-      await user.save();
+      //await user.save();
+    } else {
+      if (hasFavourite !== -1) {
+        user.favouriteBook.splice(hasFavourite, 1);
+      }
     }
+    await user.save();
 
     res.status(200).json(user);
   } catch (error) {
@@ -283,9 +314,10 @@ router.patch("/api/book/read-later", authCheck, async (req, res, next) => {
       user.bookToReadLater.push({
         _id: req.body.bookId,
       });
-
-      await user.save();
+    } else {
+      user.bookToReadLater.splice(hasReadLater, 1);
     }
+    await user.save();
 
     res.status(200).json(user);
   } catch (error) {

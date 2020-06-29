@@ -12,6 +12,14 @@ export const GETALLBOOKS = (data) => {
   };
 };
 
+export const GETBOOK = (data) => {
+  return {
+    type: "GETBOOK",
+    payload: data,
+  };
+};
+
+
 export const GETALLCATEGORIES = (data) => {
   return {
     type: "GETALLCATEGORIES",

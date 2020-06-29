@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   List,
@@ -11,6 +11,7 @@ import {
   Form,
   Button,
   Input,
+  Statistic,
 } from "antd";
 import {
   LikeOutlined,
@@ -23,8 +24,20 @@ import {
   DeleteOutlined,
   HeartOutlined,
   ReadOutlined,
+  HeartFilled,
 } from "@ant-design/icons";
 import moment from "moment";
+
+import { useSelector, useDispatch } from "react-redux";
+
+import {
+  fetchBook,
+  addComment,
+  toggleLike,
+  toggleDislike,
+  toggleFavourite,
+  toggleReadlater,
+} from "../../redux/ActionApi";
 
 const { TextArea } = Input;
 
@@ -48,11 +61,57 @@ const Editor = ({ onChange, onSubmit, submitting, value }) => (
 
 const action = "liked";
 
-const Book = () => {
+const Book = (props) => {
+  const book = useSelector((state) => state.books.book);
+  const authUser = useSelector((state) => state.authUser.authUser.user);
+
+  const dispatch = useDispatch();
+
+  const [comment, setComment] = useState("");
+
+  useEffect(() => {
+    dispatch(fetchBook(props.match.params.bookId));
+  }, []);
+
+  const onhandleComment = () => {
+    const commentData = {
+      bookId: book._id,
+      comment: comment,
+    };
+
+    dispatch(addComment(commentData, authUser._id, authUser.token));
+
+    setComment("");
+  };
+
+  const onHandleInputComment = (event) => {
+    setComment(event.target.value);
+  };
+
+  const handleLike = (event) => {
+    dispatch(toggleLike({ bookId: book._id }, authUser._id, authUser.token));
+  };
+
+  const handleDislike = (event) => {
+    dispatch(toggleDislike({ bookId: book._id }, authUser._id, authUser.token));
+  };
+
+  const handleFavourite = (event) => {
+    dispatch(
+      toggleFavourite({ bookId: book._id }, authUser._id, authUser.token)
+    );
+  };
+
+  const handleReadlater = (event) => {
+    dispatch(
+      toggleReadlater({ bookId: book._id }, authUser._id, authUser.token)
+    );
+  };
+
   return (
     <>
       <Card
-        title="Demo"
+        title={book.title}
         bordered={false}
         cover={
           <img
@@ -61,80 +120,53 @@ const Book = () => {
           />
         }
         actions={[
-          <LikeOutlined key="edit" />,
-          <DislikeOutlined key="edit" />,
-          <ReadOutlined key="edit" />,
-          <HeartOutlined key="edit" />,
+          <Statistic
+            value={book.likes && book.likes.length}
+            valueStyle={{ fontSize: "1rem" }}
+            prefix={
+              <LikeOutlined
+                style={{ fontSize: "1rem" /* color: "#08c"  */ }}
+                onClick={handleLike}
+              />
+            }
+          />,
+          <Statistic
+            value={book.dislikes && book.dislikes.length}
+            valueStyle={{ fontSize: "1rem" }}
+            prefix={
+              <DislikeOutlined
+                style={{ fontSize: "1rem" }}
+                onClick={handleDislike}
+              />
+            }
+          />,
+          <ReadOutlined key="edit" onClick={handleReadlater} />,
+          <HeartFilled key="edit" onClick={handleFavourite} />,
         ]}
       >
-        "This is description"
+        {book.description}
       </Card>
 
-      <Comment
-        author={<a>Han Solo</a>}
-        avatar={
-          <Avatar
-            src="https://images.unsplash.com/photo-1592859372969-7ce244fb6582?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
-            alt="Han Solo"
-          />
-        }
-        content={
-          <p>
-            We supply a series of design principles, practical patterns and high
-            quality design resources (Sketch and Axure), to help people create
-            their product prototypes beautifully and efficiently.
-          </p>
-        }
-        datetime={
-          <Tooltip title={moment().format("YYYY-MM-DD HH:mm:ss")}>
-            <span>{moment().fromNow()}</span>
-          </Tooltip>
-        }
-      />
-
-      <Comment
-        author={<a>Han Solo</a>}
-        avatar={
-          <Avatar
-            src="https://images.unsplash.com/photo-1592859372969-7ce244fb6582?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
-            alt="Han Solo"
-          />
-        }
-        content={
-          <p>
-            We supply a series of design principles, practical patterns and high
-            quality design resources (Sketch and Axure), to help people create
-            their product prototypes beautifully and efficiently.
-          </p>
-        }
-        datetime={
-          <Tooltip title={moment().format("YYYY-MM-DD HH:mm:ss")}>
-            <span>{moment().fromNow()}</span>
-          </Tooltip>
-        }
-      />
-
-      <Comment
-        author={<a>Han Solo</a>}
-        avatar={
-          <Avatar
-            src="https://images.unsplash.com/photo-1592859372969-7ce244fb6582?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
-            alt="Han Solo"
-          />
-        }
-        content={
-          <p>
-            We supply a series of design principles, practical patterns and high
-            quality design resources (Sketch and Axure), to help people create
-            their product prototypes beautifully and efficiently.
-          </p>
-        }
-        datetime={
-          <Tooltip title={moment().format("YYYY-MM-DD HH:mm:ss")}>
-            <span>{moment().fromNow()}</span>
-          </Tooltip>
-        }
-      />
+      {book.comments &&
+        book.comments.map((comment) => {
+          return (
+            <Comment
+              author={<a>Han Solo</a>}
+              avatar={
+                <Avatar
+                  src="https://images.unsplash.com/photo-1592859372969-7ce244fb6582?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
+                  alt="Han Solo"
+                />
+              }
+              content={<p>{comment.text}</p>}
+              datetime={
+                <Tooltip title={moment().format("YYYY-MM-DD HH:mm:ss")}>
+                  <span>{moment(comment.created).fromNow()}</span>
+                </Tooltip>
+              }
+            />
+          );
+        })}
 
       <Comment
         avatar={
@@ -143,7 +175,14 @@ const Book = () => {
             alt="Han Solo"
           />
         }
-        content={<Editor submitting="" value="" />}
+        content={
+          <Editor
+            submitting=""
+            value={comment}
+            onSubmit={onhandleComment}
+            onChange={onHandleInputComment}
+          />
+        }
       />
     </>
   );

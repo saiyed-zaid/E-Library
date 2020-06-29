@@ -9,6 +9,7 @@ import {
   GETALLBOOKS,
   GETALLCATEGORIES,
   GETAUTHORS,
+  GETBOOK,
 } from "./actions/BookActions";
 //API RELATED METHODS
 export const signup = (postData) => {
@@ -98,6 +99,22 @@ export const fetchBooks = () => {
       );
       //SUCCESS
       dispatch(GETALLBOOKS(response.data.books));
+    } catch (error) {
+      //ERROR
+    }
+  };
+};
+
+export const fetchBook = (_id) => {
+  return async (dispatch) => {
+    //LOADING
+    try {
+      //dispatch(LOADING());
+      const response = await Axios.get(
+        `${process.env.REACT_APP_BACKEND_URI}/books/${_id}`
+      );
+      //SUCCESS
+      dispatch(GETBOOK(response.data.book));
     } catch (error) {
       //ERROR
     }
@@ -200,6 +217,131 @@ export const updateData = (data, updateId, _id, token) => {
       );
 
       dispatch(fetchAuthorBooks({ _id, token }));
+      return true;
+
+      //SUCCESS
+    } catch (error) {
+      //FAILURE
+    }
+  };
+};
+
+export const addComment = (data, _id, token) => {
+  return async (dispatch) => {
+    try {
+      //LOADING
+      const book = await Axios.patch(
+        `${process.env.REACT_APP_BACKEND_URI}/book/comment`,
+        data,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      dispatch(fetchBook(data.bookId));
+      return true;
+
+      //SUCCESS
+    } catch (error) {
+      //FAILURE
+    }
+  };
+};
+
+export const toggleLike = (data, _id, token) => {
+  return async (dispatch) => {
+    try {
+      //LOADING
+      const book = await Axios.patch(
+        `${process.env.REACT_APP_BACKEND_URI}/book/like`,
+        data,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      dispatch(fetchBook(data.bookId));
+      return true;
+
+      //SUCCESS
+    } catch (error) {
+      //FAILURE
+    }
+  };
+};
+
+export const toggleDislike = (data, _id, token) => {
+  return async (dispatch) => {
+    try {
+      //LOADING
+      const book = await Axios.patch(
+        `${process.env.REACT_APP_BACKEND_URI}/book/dislike`,
+        data,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      dispatch(fetchBook(data.bookId));
+      return true;
+
+      //SUCCESS
+    } catch (error) {
+      //FAILURE
+    }
+  };
+};
+
+export const toggleFavourite = (data, _id, token) => {
+  return async (dispatch) => {
+    try {
+      //LOADING
+      const book = await Axios.patch(
+        `${process.env.REACT_APP_BACKEND_URI}/book/favourite`,
+        data,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      dispatch(fetchBook(data.bookId));
+      return true;
+
+      //SUCCESS
+    } catch (error) {
+      //FAILURE
+    }
+  };
+};
+
+export const toggleReadlater = (data, _id, token) => {
+  return async (dispatch) => {
+    try {
+      //LOADING
+      const book = await Axios.patch(
+        `${process.env.REACT_APP_BACKEND_URI}/book/read-later`,
+        data,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      dispatch(fetchBook(data.bookId));
       return true;
 
       //SUCCESS

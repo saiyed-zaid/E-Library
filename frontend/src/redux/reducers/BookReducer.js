@@ -1,5 +1,6 @@
 const initState = {
   books: [],
+  book: {},
   searchBooks: [],
   categories: [],
   authors: [],
@@ -12,6 +13,13 @@ export const bookReducer = (state = initState, action) => {
       return {
         ...state,
         books: action.payload,
+        loading: false,
+      };
+
+    case "GETBOOK":
+      return {
+        ...state,
+        book: action.payload,
         loading: false,
       };
 

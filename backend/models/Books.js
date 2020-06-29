@@ -15,7 +15,7 @@ const bookSchema = new Schema({
   },
   author: {
     type: ObjectId,
-    ref: "Users",
+    ref: "User",
     required: true,
   },
   category: {
@@ -40,16 +40,27 @@ const bookSchema = new Schema({
   },
   likes: {
     type: Array,
-    ref: "Users",
+    ref: "User",
   },
   dislikes: {
     type: Array,
-    ref: "Users",
+    ref: "User",
   },
-  comments: {
-    type: Array,
-    ref: "Users",
-  },
+  comments: [
+    {
+      postedBy: {
+        type: ObjectId,
+        ref: "User",
+      },
+      created: {
+        type: Date,
+        default: Date.now,
+      },
+      text: {
+        type: String,
+      },
+    },
+  ],
   status: {
     type: Boolean,
     default: true,
