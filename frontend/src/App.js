@@ -21,6 +21,7 @@ import AddBook from "./components/Books/add";
 import EditBook from "./components/Books/edit";
 import Search from "./components/Search";
 import ErrorPage from "./components/ErrorPages/404";
+import PrivateRoute from "./components/Helper/PrivateRoute";
 
 import store from "./redux/store";
 import { Provider, connect, useDispatch } from "react-redux";
@@ -37,7 +38,6 @@ const AppRouter = (props) => {
   useEffect(() => {
     props.getAuthUser();
   }, []); */
-
 
   return (
     <div>
@@ -67,7 +67,7 @@ const AppRouter = (props) => {
 
                 <Route
                   exact
-                  path="/dashboard"
+                  path="/"
                   render={() => {
                     if (
                       props.authUser.user &&
@@ -85,11 +85,32 @@ const AppRouter = (props) => {
                   }}
                 />
 
-                <Route exact path="/mybooks" component={MyBooks} />
+                {/* <Route exact path="/mybooks" component={MyBooks} /> */}
 
-                <Route exact path="/add-book" component={AddBook} />
+                <PrivateRoute
+                  exact
+                  path="/mybooks"
+                  component={MyBooks}
+                  {...props}
+                />
 
-                <Route exact path="/edit-book/:bookId" component={EditBook} />
+                <PrivateRoute
+                  exact
+                  path="/add-book"
+                  component={AddBook}
+                  {...props}
+                />
+
+                {/* <Route exact path="/add-book" component={AddBook} /> */}
+
+                <PrivateRoute
+                  exact
+                  path="/edit-book/:bookId"
+                  component={EditBook}
+                  {...props}
+                />
+
+                {/* <Route exact path="/edit-book/:bookId" component={EditBook} /> */}
 
                 <Route exact path="/book/:bookId" component={Book} />
 

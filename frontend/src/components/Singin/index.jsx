@@ -11,8 +11,7 @@ const Signin = (props) => {
     try {
       const response = await props.signinDispatch(values);
 
-      response && props.history.push("/dashboard");
-      
+      response && props.history.push("/");
     } catch (error) {}
   };
 

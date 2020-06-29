@@ -10,6 +10,7 @@ const { Header, Content } = Layout;
 
 const Navbar = (props) => {
   const dispatch = useDispatch();
+  console.log("NAV PROPS", props.authUser.user);
 
   const logout = () => {
     dispatch(Logout());
@@ -56,17 +57,17 @@ const Navbar = (props) => {
       >
         {props.isLoggedIn && (
           <Menu.Item>
-            <Link to="/dashboard">Dashboard</Link>
+            <Link to="/">Dashboard</Link>
           </Menu.Item>
         )}
 
-        {props.isLoggedIn && (
+        {props.isLoggedIn && props.authUser.user.role === "writer" && (
           <Menu.Item>
             <Link to="/add-book">Add Book</Link>
           </Menu.Item>
         )}
 
-        {props.isLoggedIn && (
+        {props.isLoggedIn && props.authUser.user.role === "writer" && (
           <Menu.Item>
             <Link to="/mybooks">My Books</Link>
           </Menu.Item>
