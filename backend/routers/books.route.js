@@ -249,16 +249,12 @@ router.patch("/api/book/favourite", authCheck, async (req, res, next) => {
       return res.status(404).json({ error: "Book Not Found" });
     }
 
-    const hasFavourite = user.favouriteBook.findIndex(
-      (book) => book._id === req.body.bookId
-    );
+    const hasFavourite = user.favouriteBook.indexOf(book._id);
 
     if (hasFavourite === -1) {
       user.favouriteBook.push({
-        _id: req.body.bookId,
+        _id: book._id,
       });
-
-      //await user.save();
     } else {
       if (hasFavourite !== -1) {
         user.favouriteBook.splice(hasFavourite, 1);
@@ -268,6 +264,7 @@ router.patch("/api/book/favourite", authCheck, async (req, res, next) => {
 
     res.status(200).json(user);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Something Went Wrong..." });
   }
 });
@@ -306,13 +303,11 @@ router.patch("/api/book/read-later", authCheck, async (req, res, next) => {
       return res.status(404).json({ error: "Book Not Found" });
     }
 
-    const hasReadLater = user.bookToReadLater.findIndex(
-      (book) => book._id === req.body.bookId
-    );
+    const hasReadLater = user.bookToReadLater.indexOf(book._id);
 
     if (hasReadLater === -1) {
       user.bookToReadLater.push({
-        _id: req.body.bookId,
+        _id: book._id,
       });
     } else {
       user.bookToReadLater.splice(hasReadLater, 1);

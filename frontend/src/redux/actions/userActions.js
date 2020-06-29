@@ -11,6 +11,13 @@ export const login = (data) => {
   };
 };
 
+export const authUser = (data) => {
+  return {
+    type: "AUTHUSER",
+    payload: data,
+  };
+};
+
 export const Logout = () => {
   return {
     type: "LOGOUT",

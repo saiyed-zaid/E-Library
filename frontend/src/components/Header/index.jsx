@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { withRouter, Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Layout, Menu, Avatar, Dropdown } from "antd";
 
@@ -10,11 +10,11 @@ const { Header, Content } = Layout;
 
 const Navbar = (props) => {
   const dispatch = useDispatch();
-  console.log("NAV PROPS", props.authUser.user);
+
+  const authUser = useSelector((state) => state.authUser.authUser);
 
   const logout = () => {
     dispatch(Logout());
-    console.log("APP ROUTER PROPS", props);
 
     props.history.push("/signin");
   };
@@ -61,13 +61,13 @@ const Navbar = (props) => {
           </Menu.Item>
         )}
 
-        {props.isLoggedIn && props.authUser.user.role === "writer" && (
+        {props.isLoggedIn && authUser.role === "writer" && (
           <Menu.Item>
             <Link to="/add-book">Add Book</Link>
           </Menu.Item>
         )}
 
-        {props.isLoggedIn && props.authUser.user.role === "writer" && (
+        {props.isLoggedIn && authUser.role === "writer" && (
           <Menu.Item>
             <Link to="/mybooks">My Books</Link>
           </Menu.Item>
@@ -81,9 +81,7 @@ const Navbar = (props) => {
           <Menu.Item key="3">
             <Dropdown overlay={menu}>
               <Avatar style={{ verticalAlign: "middle" }} size="small" gap={1}>
-                {props.authUser &&
-                  props.authUser.user &&
-                  props.authUser.user.email}
+                {authUser && authUser.email}
               </Avatar>
             </Dropdown>
           </Menu.Item>

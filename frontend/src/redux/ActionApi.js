@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { loader, login, failure } from "./actions/userActions";
+import { loader, login, failure, authUser } from "./actions/userActions";
 import {
   GET,
   LOADING,
@@ -56,13 +56,32 @@ export const signin = (postData) => {
       );
 
       dispatch(login(response.data));
-      //dispatch(SUCCESS());
-
       return true;
     } catch (error) {
       if (error.response) {
         dispatch(failure(error.response.data.error));
       }
+    }
+  };
+};
+
+export const fetchAuthUser = (_id, token) => {
+  return async (dispatch) => {
+    try {
+      //LOADING
+      const response = await Axios.get(
+        `${process.env.REACT_APP_BACKEND_URI}/user/${_id}`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      dispatch(authUser(response.data));
+      //SUCCESS
+    } catch (error) {
+      //FAILURE
     }
   };
 };
@@ -317,6 +336,7 @@ export const toggleFavourite = (data, _id, token) => {
       );
 
       dispatch(fetchBook(data.bookId));
+      //dispatch(fetchAuthUser(_id, token));
       return true;
 
       //SUCCESS

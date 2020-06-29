@@ -63,7 +63,7 @@ const action = "liked";
 
 const Book = (props) => {
   const book = useSelector((state) => state.books.book);
-  const authUser = useSelector((state) => state.authUser.authUser.user);
+  const authUser = useSelector((state) => state.authUser.authUser);
 
   const dispatch = useDispatch();
 
@@ -97,6 +97,7 @@ const Book = (props) => {
   };
 
   const handleFavourite = (event) => {
+
     dispatch(
       toggleFavourite({ bookId: book._id }, authUser._id, authUser.token)
     );

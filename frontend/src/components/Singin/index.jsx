@@ -1,16 +1,17 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { Alert, Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 
 import { signin } from "../../redux/ActionApi";
 
 const Signin = (props) => {
+  const dispatch = useDispatch();
+
   const onHandleSubmit = async (values) => {
     try {
-      const response = await props.signinDispatch(values);
-
+      const response = await dispatch(signin(values));
       response && props.history.push("/");
     } catch (error) {}
   };
@@ -90,7 +91,7 @@ const Signin = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
+/* const mapStateToProps = (state) => {
   return state;
 };
 
@@ -100,4 +101,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Signin);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Signin));
+ */
+
+export default withRouter(Signin);

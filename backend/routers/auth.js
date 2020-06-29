@@ -7,8 +7,26 @@ const bcrypt = require("bcrypt");
 const md5 = require("md5");
 
 const mailer = require("../helper/mailer");
+const authCheck = require("../middlewares/authCheck");
+
 const User = require("../models/Users");
 const { ObjectId } = require("mongodb");
+
+//Fetch Login User Data
+
+router.get("/api/user/:userId", authCheck, async (req, res, next) => {
+  try {
+    const user = await User.findById(req.auth._id)
+      .populate("favouriteBook", "title description")
+      .populate("bookToReadLater", "title description");
+
+    console.log("user", user);
+
+    return res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: "Something Went Wrong" });
+  }
+});
 
 router.post(
   "/api/signup",
@@ -128,7 +146,9 @@ router.post(
             ],
           },
         ],
-      });
+      })
+        .populate("favouriteBook", "title description")
+        .populate("bookToReadLater", "title description");
 
       if (!userExists) {
         return res.status(401).json({
@@ -170,14 +190,12 @@ router.post(
 
       res.status(200).json({
         isLoggedIn: true,
-        user: {
-          _id: userExists._id,
-          name: userExists.name,
-          email: userExists.email,
-          role: userExists.role,
-          photo: userExists.photo,
-          token: token,
-        },
+        token: token,
+        _id: userExists._id,
+        name: userExists.name,
+        email: userExists.email,
+        role: userExists.role,
+        photo: userExists.photo,
       });
     } catch (error) {
       console.log(error);

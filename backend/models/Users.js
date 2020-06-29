@@ -47,14 +47,19 @@ const userSchema = new Schema({
     type: String,
     lowercase: true,
   },
-  favouriteBook: {
-    type: Array,
-    ref: "Books",
-  },
-  bookToReadLater: {
-    type: Array,
-    ref: "Books",
-  },
+  favouriteBook: [
+    {
+      type: ObjectId,
+      ref: "Books",
+    },
+  ],
+
+  bookToReadLater: [
+    {
+      type: ObjectId,
+      ref: "Books",
+    },
+  ],
   resetPasswordToken: {
     type: String,
     default: "",

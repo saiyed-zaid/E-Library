@@ -2,6 +2,7 @@ const initState = {
   authUser: window.localStorage.getItem("authUser")
     ? JSON.parse(window.localStorage.getItem("authUser"))
     : {},
+  user: {},
   loading: false,
 };
 
@@ -15,12 +16,20 @@ export const userReducer = (state = initState, action) => {
         loading: false,
       };
 
+    case "AUTHUSER":
+      return {
+        ...state,
+        user: action.payload,
+        loading: false,
+      };
+
     case "LOGOUT":
       window.localStorage.setItem("authUser", JSON.stringify({}));
       window.localStorage.removeItem("authUser");
       return {
         ...state,
         authUser: {},
+        user: {},
         loading: false,
       };
 

@@ -24,7 +24,7 @@ import ErrorPage from "./components/ErrorPages/404";
 import PrivateRoute from "./components/Helper/PrivateRoute";
 
 import store from "./redux/store";
-import { Provider, connect, useDispatch } from "react-redux";
+import { Provider, connect, useDispatch, useSelector } from "react-redux";
 
 import { GET, Logout } from "./redux/actions/userActions";
 
@@ -33,6 +33,8 @@ const { Header, Content } = Layout;
 const AppRouter = (props) => {
   const dispatch = useDispatch();
 
+  const authUser = useSelector((state) => state.authUser.authUser);
+  
   const isLoggedIn = window.localStorage.getItem("authUser") ? true : false;
   /* 
   useEffect(() => {
@@ -43,7 +45,7 @@ const AppRouter = (props) => {
     <div>
       <Layout>
         <Router>
-          <Navbar isLoggedIn={isLoggedIn} {...props} />
+          <Navbar isLoggedIn={isLoggedIn} />
           <Content
             className="site-layout"
             style={{ padding: "0 50px", marginTop: 10 }}
@@ -53,6 +55,23 @@ const AppRouter = (props) => {
               style={{ padding: 10, minHeight: 380 }}
             >
               <Switch>
+                <Route
+                  exact
+                  path="/"
+                  render={() => {
+                    if (authUser && authUser.role === "writer") {
+                      return <Writer />;
+                    } else if (
+                      authUser &&
+                      authUser.role === "reader"
+                    ) {
+                      return <Reader />;
+                    } else {
+                      alert("Oops signin render");
+                      return <Signin />;
+                    }
+                  }}
+                />
                 <Route exact path="/signup" component={Signup} />
 
                 <Route exact path="/signin" component={Signin} />
@@ -64,26 +83,6 @@ const AppRouter = (props) => {
                 />
 
                 <Route exact path="/reset-password" component={ResetPassword} />
-
-                <Route
-                  exact
-                  path="/"
-                  render={() => {
-                    if (
-                      props.authUser.user &&
-                      props.authUser.user.role === "writer"
-                    ) {
-                      return <Writer />;
-                    } else if (
-                      props.authUser.user &&
-                      props.authUser.user.role === "reader"
-                    ) {
-                      return <Reader />;
-                    } else {
-                      return <Signin />;
-                    }
-                  }}
-                />
 
                 {/* <Route exact path="/mybooks" component={MyBooks} /> */}
 
@@ -125,7 +124,7 @@ const AppRouter = (props) => {
     </div>
   );
 };
-
+/* 
 const mapStateToProps = (state) => {
   return state.authUser;
 };
@@ -135,11 +134,8 @@ const mapDispatchToProps = (dispatch) => {
     getAuthUser: () => dispatch(GET()),
   };
 };
-
-const MainComponent = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(AppRouter));
+*/
+const MainComponent = withRouter(AppRouter);
 
 const App = () => {
   return (
