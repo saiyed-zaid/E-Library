@@ -34,7 +34,7 @@ const AppRouter = (props) => {
   const dispatch = useDispatch();
 
   const authUser = useSelector((state) => state.authUser.authUser);
-  
+
   const isLoggedIn = window.localStorage.getItem("authUser") ? true : false;
   /* 
   useEffect(() => {
@@ -61,10 +61,7 @@ const AppRouter = (props) => {
                   render={() => {
                     if (authUser && authUser.role === "writer") {
                       return <Writer />;
-                    } else if (
-                      authUser &&
-                      authUser.role === "reader"
-                    ) {
+                    } else if (authUser && authUser.role === "reader") {
                       return <Reader />;
                     } else {
                       alert("Oops signin render");
@@ -90,6 +87,7 @@ const AppRouter = (props) => {
                   exact
                   path="/mybooks"
                   component={MyBooks}
+                  authUser={authUser}
                   {...props}
                 />
 
@@ -97,6 +95,7 @@ const AppRouter = (props) => {
                   exact
                   path="/add-book"
                   component={AddBook}
+                  authUser={authUser}
                   {...props}
                 />
 
@@ -106,6 +105,7 @@ const AppRouter = (props) => {
                   exact
                   path="/edit-book/:bookId"
                   component={EditBook}
+                  authUser={authUser}
                   {...props}
                 />
 

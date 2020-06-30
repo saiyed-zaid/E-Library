@@ -73,15 +73,23 @@ const Navbar = (props) => {
           </Menu.Item>
         )}
 
-        <Menu.Item>
-          <Link to="/search">Search</Link>
-        </Menu.Item>
+        {props.isLoggedIn && authUser.role === "reader" && (
+          <Menu.Item>
+            <Link to="/search">Search</Link>
+          </Menu.Item>
+        )}
 
         {props.isLoggedIn && (
           <Menu.Item key="3">
             <Dropdown overlay={menu}>
-              <Avatar style={{ verticalAlign: "middle" }} size="small" gap={1}>
-                {authUser && authUser.email}
+              <Avatar
+                style={{ backgroundColor: "#7265e6", verticalAlign: "middle" }}
+                size="large"
+                gap={1}
+              >
+                {authUser &&
+                  authUser.username.charAt(0).toUpperCase() +
+                    authUser.username.slice(1)}
               </Avatar>
             </Dropdown>
           </Menu.Item>

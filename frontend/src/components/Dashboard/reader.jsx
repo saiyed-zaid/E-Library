@@ -145,7 +145,10 @@ const Dashboard = (props) => {
                 <Col xs={24} md={8}>
                   <Card
                     bordered={true}
-                    title={book.title}
+                    title={
+                      book.title.charAt(0).toUpperCase() +
+                      book.title.slice(1)
+                    }
                     cover={
                       <img
                         alt="example"
@@ -155,7 +158,10 @@ const Dashboard = (props) => {
                   >
                     <Row gutter={24}>
                       <Col span={20}>
-                        <p>{book.description}</p>
+                        <p>
+                          {book.description.charAt(0).toUpperCase() +
+                            book.description.slice(1)}
+                        </p>
                       </Col>
                       <Col span={4}>
                         <InfoCircleOutlined
@@ -193,7 +199,9 @@ const Dashboard = (props) => {
                 <Col xs={24} md={8}>
                   <Card
                     bordered={true}
-                    title={book.title}
+                    title={
+                      book.title.charAt(0).toUpperCase() + book.title.slice(1)
+                    }
                     cover={
                       <img
                         alt="example"
@@ -203,10 +211,16 @@ const Dashboard = (props) => {
                   >
                     <Row gutter={24}>
                       <Col span={20}>
-                        <p>{book.description}</p>
+                        <p>
+                          {book.description.charAt(0).toUpperCase() +
+                            book.description.slice(1)}
+                        </p>
                       </Col>
                       <Col span={4}>
-                        <InfoCircleOutlined style={{ cursor: "pointer" }} />
+                        <InfoCircleOutlined
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleBookView(book._id)}
+                        />
                       </Col>
                     </Row>
                   </Card>

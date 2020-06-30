@@ -88,8 +88,8 @@ export const fetchAuthUser = (_id, token) => {
 
 export const fetchAuthorBooks = (data) => {
   return async (dispatch) => {
-    //LOADING
     try {
+      //LOADING
       //dispatch(LOADING());
       const response = await Axios.get(
         `${process.env.REACT_APP_BACKEND_URI}/books/author/${data._id}`,

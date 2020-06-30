@@ -21,12 +21,7 @@ const Edit = (props) => {
 
   const handleSubmit = (data) => {
     const response = dispatch(
-      updateData(
-        data,
-        props.match.params.bookId,
-        authUser.user._id,
-        authUser.user.token
-      )
+      updateData(data, props.match.params.bookId, authUser._id, authUser.token)
     );
 
     response && props.history.push("/mybooks");

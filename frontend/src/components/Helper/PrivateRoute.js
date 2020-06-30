@@ -1,12 +1,11 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 const PrivateRoute = ({ component: Component, authUser, ...rest }) => {
-  console.log("PRIVATE ROUTES", authUser);
   return (
     <Route
       {...rest}
       render={(props) =>
-        authUser.isLoggedIn && authUser.user.role === "writer" ? (
+        authUser.isLoggedIn && authUser.role === "writer" ? (
           <Component {...props} />
         ) : (
           <Redirect

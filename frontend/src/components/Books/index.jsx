@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Row, Col, Card, PageHeader, Button, Popconfirm, Avatar } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-import { connect, useDispatch } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 
 import { fetchAuthorBooks, deleteData } from "../../redux/ActionApi";
 
@@ -11,14 +11,16 @@ const { Meta } = Card;
 const MyBooks = (props) => {
   const dispatch = useDispatch();
 
+  const authUser = useSelector((state) => state.authUser.authUser);
+
+  const books = useSelector((state) => state.books.books);
+
   useEffect(() => {
-    props.fetchBooks(props.authUser);
+    dispatch(fetchAuthorBooks(authUser));
   }, []);
 
   const handleDelete = (_id) => {
-    const response = dispatch(
-      deleteData(_id, props.authUser._id, props.authUser.token)
-    );
+    const response = dispatch(deleteData(_id, authUser._id, authUser.token));
   };
 
   const handleEdit = (_id) => {
@@ -44,7 +46,7 @@ const MyBooks = (props) => {
       </div>
 
       <Row gutter={[16, 16]}>
-        {props.books.loading && (
+        {/*  {props.books.loading && (
           <Col xs={24} md={4}>
             <Card loading>
               <Meta
@@ -56,51 +58,52 @@ const MyBooks = (props) => {
               />
             </Card>
           </Col>
-        )}
-        {props.books.books.map((book) => {
-          return (
-            <Col xs={24} md={4}>
-              <Card
-                title={book.title}
-                bordered={false}
-                cover={
-                  <img
-                    alt="example"
-                    src="https://images.unsplash.com/photo-1592859372969-7ce244fb6582?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
-                  />
-                }
-                actions={[
-                  <EditOutlined
-                    key="edit"
-                    onClick={() => handleEdit(book._id)}
-                  />,
-                  <Popconfirm
-                    title="Are you sure？"
-                    okText="Yes"
-                    cancelText="No"
-                    onConfirm={() => handleDelete(book._id)}
-                  >
+        )} */}
+        {books &&
+          books.map((book) => {
+            return (
+              <Col xs={24} md={4}>
+                <Card
+                  title={book.title}
+                  bordered={false}
+                  cover={
+                    <img
+                      alt="example"
+                      src="https://images.unsplash.com/photo-1592859372969-7ce244fb6582?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
+                    />
+                  }
+                  actions={[
+                    <EditOutlined
+                      key="edit"
+                      onClick={() => handleEdit(book._id)}
+                    />,
                     <Popconfirm
                       title="Are you sure？"
                       okText="Yes"
                       cancelText="No"
+                      onConfirm={() => handleDelete(book._id)}
                     >
-                      <DeleteOutlined key="delete" />
-                    </Popconfirm>
-                  </Popconfirm>,
-                ]}
-              >
-                {book.description}
-              </Card>
-            </Col>
-          );
-        })}
+                      <Popconfirm
+                        title="Are you sure？"
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <DeleteOutlined key="delete" />
+                      </Popconfirm>
+                    </Popconfirm>,
+                  ]}
+                >
+                  {book.description}
+                </Card>
+              </Col>
+            );
+          })}
       </Row>
     </>
   );
 };
 
-const mapStateToProps = (state) => {
+/* const mapStateToProps = (state) => {
   return {
     books: state.books,
     authUser: state.authUser.authUser.user,
@@ -109,8 +112,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToPropss = (dispatch) => {
   return {
-    fetchBooks: (token, id) => dispatch(fetchAuthorBooks(token, id)),
+    fetchBooks: (token, id) => dispatch(fetchAuthorBooks({ token, id })),
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToPropss)(MyBooks);
+*/
+
+export default MyBooks;

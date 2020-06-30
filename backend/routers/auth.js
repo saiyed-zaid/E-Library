@@ -192,7 +192,7 @@ router.post(
         isLoggedIn: true,
         token: token,
         _id: userExists._id,
-        name: userExists.name,
+        username: userExists.username,
         email: userExists.email,
         role: userExists.role,
         photo: userExists.photo,
