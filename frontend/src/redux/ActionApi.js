@@ -370,3 +370,28 @@ export const toggleReadlater = (data, _id, token) => {
     }
   };
 };
+
+export const updatePlan = (data, _id, token) => {
+  return async (dispatch) => {
+    try {
+      //LOADING
+      const book = await Axios.post(
+        `${process.env.REACT_APP_BACKEND_URI}/plan/${_id}`,
+        data,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      dispatch(fetchAuthUser(_id, token));
+      return true;
+
+      //SUCCESS
+    } catch (error) {
+      //FAILURE
+    }
+  };
+};

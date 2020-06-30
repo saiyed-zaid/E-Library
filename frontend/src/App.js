@@ -22,6 +22,7 @@ import EditBook from "./components/Books/edit";
 import Search from "./components/Search";
 import ErrorPage from "./components/ErrorPages/404";
 import PrivateRoute from "./components/Helper/PrivateRoute";
+import Plans from "./components/Plans";
 
 import store from "./redux/store";
 import { Provider, connect, useDispatch, useSelector } from "react-redux";
@@ -114,6 +115,8 @@ const AppRouter = (props) => {
                 <Route exact path="/book/:bookId" component={Book} />
 
                 <Route exact path="/search" component={Search} />
+
+                <Route exact path="/plans" component={Plans} />
 
                 <Route path="*" component={ErrorPage} />
               </Switch>

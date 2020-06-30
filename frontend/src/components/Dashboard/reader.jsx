@@ -29,7 +29,15 @@ const Dashboard = (props) => {
 
   useEffect(() => {
     dispatch(fetchAuthUser(authUser._id, authUser.token));
-  }, []);
+  }, [authUser]);
+
+  if (user) {
+    if (!user.plan && user._id) {
+      props.history.push("/plans");
+    }
+  }
+
+  console.log((user && !user.plan) || user.plan);
 
   const favouriteBooks = useSelector(
     (state) => state.authUser.user.favouriteBook
@@ -146,8 +154,7 @@ const Dashboard = (props) => {
                   <Card
                     bordered={true}
                     title={
-                      book.title.charAt(0).toUpperCase() +
-                      book.title.slice(1)
+                      book.title.charAt(0).toUpperCase() + book.title.slice(1)
                     }
                     cover={
                       <img

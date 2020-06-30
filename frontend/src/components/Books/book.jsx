@@ -68,6 +68,7 @@ const Book = (props) => {
   const dispatch = useDispatch();
 
   const [comment, setComment] = useState("");
+  const [hasFavourite, setHasFavourite] = useState(false);
 
   useEffect(() => {
     dispatch(fetchBook(props.match.params.bookId));
@@ -97,7 +98,6 @@ const Book = (props) => {
   };
 
   const handleFavourite = (event) => {
-
     dispatch(
       toggleFavourite({ bookId: book._id }, authUser._id, authUser.token)
     );

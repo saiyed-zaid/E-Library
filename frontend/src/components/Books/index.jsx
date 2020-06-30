@@ -1,10 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col, Card, PageHeader, Button, Popconfirm, Avatar } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  EyeOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  EyeInvisibleOutlined,
+} from "@ant-design/icons";
 
 import { connect, useDispatch, useSelector } from "react-redux";
 
-import { fetchAuthorBooks, deleteData } from "../../redux/ActionApi";
+import {
+  fetchAuthorBooks,
+  deleteData,
+  updateData,
+} from "../../redux/ActionApi";
 
 const { Meta } = Card;
 
@@ -25,6 +34,12 @@ const MyBooks = (props) => {
 
   const handleEdit = (_id) => {
     props.history.push(`/edit-book/${_id}`);
+  };
+
+  const handlePrivacy = (_id, status) => {
+    dispatch(
+      updateData({ status: !status }, _id, authUser._id, authUser.token)
+    );
   };
 
   return (
@@ -64,7 +79,9 @@ const MyBooks = (props) => {
             return (
               <Col xs={24} md={4}>
                 <Card
-                  title={book.title}
+                  title={
+                    book.title.charAt(0).toUpperCase() + book.title.slice(1)
+                  }
                   bordered={false}
                   cover={
                     <img
@@ -83,17 +100,24 @@ const MyBooks = (props) => {
                       cancelText="No"
                       onConfirm={() => handleDelete(book._id)}
                     >
-                      <Popconfirm
-                        title="Are you sure？"
-                        okText="Yes"
-                        cancelText="No"
-                      >
-                        <DeleteOutlined key="delete" />
-                      </Popconfirm>
+                      <DeleteOutlined key="delete" />
+                    </Popconfirm>,
+                    <Popconfirm
+                      title={
+                        book.status
+                          ? "Are you sure to private this book?"
+                          : "Are you sure to public this book"
+                      }
+                      okText="Yes"
+                      cancelText="No"
+                      onConfirm={() => handlePrivacy(book._id, book.status)}
+                    >
+                      {book.status ? <EyeOutlined /> : <EyeInvisibleOutlined />}
                     </Popconfirm>,
                   ]}
                 >
-                  {book.description}
+                  {book.description.charAt(0).toUpperCase() +
+                    book.description.slice(1)}
                 </Card>
               </Col>
             );
@@ -102,21 +126,5 @@ const MyBooks = (props) => {
     </>
   );
 };
-
-/* const mapStateToProps = (state) => {
-  return {
-    books: state.books,
-    authUser: state.authUser.authUser.user,
-  };
-};
-
-const mapDispatchToPropss = (dispatch) => {
-  return {
-    fetchBooks: (token, id) => dispatch(fetchAuthorBooks({ token, id })),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToPropss)(MyBooks);
-*/
 
 export default MyBooks;

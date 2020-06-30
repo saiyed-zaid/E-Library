@@ -4,6 +4,7 @@ const router = express.Router();
 const Books = require("../models/Books");
 const Users = require("../models/Users");
 const authCheck = require("../middlewares/authCheck");
+const checkRole = require("../middlewares/checkRole");
 const hasAuthorization = require("../middlewares/hasAuthorization");
 
 const { body, validationResult } = require("express-validator");
@@ -54,13 +55,20 @@ router.get("/api/books/:bookId", async (req, res, next) => {
 });
 
 //return empty array when no books found
-router.get("/api/books/author/:userId", async (req, res, next) => {
-  try {
-    const books = await Books.find({
-      author: new ObjectId(req.params.userId),
-      status: true,
-    });
+router.get("/api/books/author/:userId", checkRole, async (req, res, next) => {
+  var books = [];
 
+  try {
+    if (req.privateBookPrivacy) {
+      books = await Books.find({
+        author: new ObjectId(req.params.userId),
+        status: true,
+      });
+    } else {
+      books = await Books.find({
+        author: new ObjectId(req.params.userId),
+      });
+    }
     return res.status(200).json({ books });
   } catch (error) {
     res.status(500).json({ error: "Something Went Wrong..." });
