@@ -99,7 +99,7 @@ const Book = (props) => {
 
   if (user.favouriteBook && user.favouriteBook.length > 0) {
     const index = user.favouriteBook.findIndex((value) => {
-      return value._id === book._id;
+      return value.book._id === book._id;
     });
     index !== -1 && (hasFavourite = true);
   }

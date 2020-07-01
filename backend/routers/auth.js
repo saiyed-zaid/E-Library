@@ -17,14 +17,23 @@ const { ObjectId } = require("mongodb");
 router.get("/api/user/:userId", authCheck, async (req, res, next) => {
   try {
     const user = await User.findById(req.auth._id)
-      .populate("favouriteBook", "title description reference")
+      .populate("favouriteBook.book")
       .populate("bookToReadLater", "title description reference")
       .populate("currentReading", "title description reference");
+
+    if (user.favouriteBook.length > 0) {
+      user.favouriteBook.sort(function (a, b) {
+        return new Date(a.added) - new Date(b.added);
+      });
+    }
+
     return res.status(200).json(user);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Something Went Wrong" });
   }
 });
+//favouriteBook
 
 router.post(
   "/api/signup",

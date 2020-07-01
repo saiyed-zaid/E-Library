@@ -43,6 +43,7 @@ app.use(
 );
 
 app.post("/api/upload", (req, res, next) => {
+  //SEND PUBLIC URL
   console.log("file", req.file);
 
   res.send("uploaded");

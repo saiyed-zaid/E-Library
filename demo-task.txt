@@ -26,8 +26,8 @@ Dashboard:
 	- Top most 5 reading count 
       - (for reader):
 	- recently 3 book read
-	- recently 3 favorite
-	- random 3 from read later book list
+	- recently 3 favorite [DONE]
+	- random 3 from read later book list[DONE]
 
 Search in library: (for reader)
 	- can search book by category, name, author and so on... [DONE]

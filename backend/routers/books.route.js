@@ -257,11 +257,16 @@ router.patch("/api/book/favourite", authCheck, async (req, res, next) => {
       return res.status(404).json({ error: "Book Not Found" });
     }
 
-    const hasFavourite = user.favouriteBook.indexOf(book._id);
+    const hasFavourite = user.favouriteBook.findIndex((value) => {
+      return value.book.toString() === book._id.toString();
+    });
 
     if (hasFavourite === -1) {
       user.favouriteBook.push({
-        _id: book._id,
+        book: {
+          _id: book._id,
+        },
+        added: Date.now(),
       });
     } else {
       if (hasFavourite !== -1) {

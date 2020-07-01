@@ -30,6 +30,7 @@ import {
 import { SETBOOKTOREAD } from "../../redux/actions/BookActions";
 
 import { useSelector, useDispatch } from "react-redux";
+import { ExceptionMap } from "antd/lib/result";
 
 const Dashboard = (props) => {
   const { Content } = Layout;
@@ -57,9 +58,14 @@ const Dashboard = (props) => {
     (state) => state.authUser.user.favouriteBook
   );
 
-  const ReadlaterBooks = useSelector(
+  var ReadlaterBooks = useSelector(
     (state) => state.authUser.user.bookToReadLater
   );
+
+  if (ReadlaterBooks && ReadlaterBooks.length > 3) {
+    const shuffled = ReadlaterBooks.sort(() => 0.5 - Math.random());
+    ReadlaterBooks = shuffled.slice(0, 3);
+  }
 
   const currentReading = useSelector(
     (state) => state.authUser.user.currentReading
@@ -175,37 +181,40 @@ const Dashboard = (props) => {
         )}
         <Row gutter={[16, 16]}>
           {favouriteBooks &&
-            favouriteBooks.map((book) => {
+            favouriteBooks.map((book, index) => {
               return (
-                <Col xs={24} md={8}>
-                  <Card
-                    bordered={true}
-                    title={
-                      book.title.charAt(0).toUpperCase() + book.title.slice(1)
-                    }
-                    cover={
-                      <img
-                        alt="example"
-                        src="https://images.unsplash.com/photo-1592859372969-7ce244fb6582?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
-                      />
-                    }
-                  >
-                    <Row gutter={24}>
-                      <Col span={20}>
-                        <p>
-                          {book.description.charAt(0).toUpperCase() +
-                            book.description.slice(1)}
-                        </p>
-                      </Col>
-                      <Col span={4}>
-                        <InfoCircleOutlined
-                          style={{ cursor: "pointer" }}
-                          onClick={() => handleBookView(book._id)}
+                index <= 2 && (
+                  <Col xs={24} md={8}>
+                    <Card
+                      bordered={true}
+                      title={
+                        book.book.title.charAt(0).toUpperCase() +
+                        book.book.title.slice(1)
+                      }
+                      cover={
+                        <img
+                          alt="example"
+                          src="https://images.unsplash.com/photo-1592859372969-7ce244fb6582?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
                         />
-                      </Col>
-                    </Row>
-                  </Card>
-                </Col>
+                      }
+                    >
+                      <Row gutter={24}>
+                        <Col span={20}>
+                          <p>
+                            {book.book.description.charAt(0).toUpperCase() +
+                              book.book.description.slice(1)}
+                          </p>
+                        </Col>
+                        <Col span={4}>
+                          <InfoCircleOutlined
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleBookView(book.book._id)}
+                          />
+                        </Col>
+                      </Row>
+                    </Card>
+                  </Col>
+                )
               );
             })}
         </Row>
@@ -228,6 +237,7 @@ const Dashboard = (props) => {
         )}
         <Row gutter={[16, 16]}>
           {ReadlaterBooks &&
+            ReadlaterBooks.length >= 0 &&
             ReadlaterBooks.map((book) => {
               return (
                 <Col xs={24} md={8}>

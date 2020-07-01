@@ -49,8 +49,14 @@ const userSchema = new Schema({
   },
   favouriteBook: [
     {
-      type: ObjectId,
-      ref: "Books",
+      book: {
+        type: ObjectId,
+        ref: "Books",
+      },
+      added: {
+        type: Date,
+        default: Date.now,
+      },
     },
   ],
   bookToReadLater: [
