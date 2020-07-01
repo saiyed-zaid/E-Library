@@ -35,7 +35,12 @@ const multerConfig = multer.diskStorage({
   },
 });
 
-app.use(multer({ storage: multerConfig }).single("reference"));
+app.use(
+  multer({ storage: multerConfig }).fields([
+    { name: "photo" },
+    { name: "reference" },
+  ])
+);
 
 app.post("/api/upload", (req, res, next) => {
   console.log("file", req.file);

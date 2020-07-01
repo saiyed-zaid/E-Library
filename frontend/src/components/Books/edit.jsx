@@ -1,13 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { updateData } from "../../redux/ActionApi";
 
-import { PageHeader, Button, Form, Radio, Input, Select, Upload } from "antd";
+import {
+  PageHeader,
+  Button,
+  Form,
+  Radio,
+  Input,
+  Select,
+  Upload,
+  message,
+} from "antd";
+
 import { InboxOutlined } from "@ant-design/icons";
 
 const Edit = (props) => {
   const dispatch = useDispatch();
+
+  const [photo, setPhoto] = useState("");
+  const [reference, setReference] = useState("");
 
   const authUser = useSelector((state) => state.authUser.authUser);
 
@@ -19,7 +32,48 @@ const Edit = (props) => {
 
   const { Dragger } = Upload;
 
+  const photoProps = {
+    name: "photo",
+    multiple: true,
+    action: `${process.env.REACT_APP_BACKEND_URI}/upload`,
+    onChange(info) {
+      const { status } = info.file;
+      if (status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (status === "done") {
+        setPhoto(`http://localhost:5431/upload/${info.file.name}`);
+
+        message.success(`${info.file.name} file uploaded successfully.`);
+      } else if (status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
+
+  const referenceProps = {
+    name: "reference",
+    multiple: true,
+    action: `${process.env.REACT_APP_BACKEND_URI}/upload`,
+    onChange(info) {
+      const { status } = info.file;
+      if (status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (status === "done") {
+        setReference(`http://localhost:5431/upload/${info.file.name}`);
+
+        message.success(`${info.file.name} file uploaded successfully.`);
+      } else if (status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
+
   const handleSubmit = (data) => {
+    data.photo = photo;
+    data.reference = reference;
+
     const response = dispatch(
       updateData(data, props.match.params.bookId, authUser._id, authUser.token)
     );
@@ -57,15 +111,10 @@ const Edit = (props) => {
 
         <Form.Item
           name="photo"
-          label="Photo"
-          rules={[{ required: true, message: "Please input photo!" }]}
-          initialValue={book[0] && book[0].photo}
+          label="Cover Photo"
+          rules={[{ required: true, message: "Please input your book image!" }]}
         >
-          <Input value="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-        </Form.Item>
-
-        {/* <Form.Item>
-          <Dragger>
+          <Dragger {...photoProps}>
             <p className="ant-upload-drag-icon">
               <InboxOutlined />
             </p>
@@ -74,6 +123,15 @@ const Edit = (props) => {
             </p>
             <p className="ant-upload-hint">Upload your book cover image</p>
           </Dragger>
+        </Form.Item>
+
+        {/* <Form.Item
+          name="photo"
+          label="Photo"
+          rules={[{ required: true, message: "Please input photo!" }]}
+          initialValue={book[0] && book[0].photo}
+        >
+          <Input value="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
         </Form.Item> */}
 
         <Form.Item label="Category" name="category">
@@ -108,6 +166,22 @@ const Edit = (props) => {
           initialValue={book[0] && book[0].reference}
         >
           <Input />
+        </Form.Item>
+
+        <Form.Item
+          name="reference"
+          label="Reference"
+          rules={[{ required: true, message: "Please input your book PDF!" }]}
+        >
+          <Dragger {...referenceProps}>
+            <p className="ant-upload-drag-icon">
+              <InboxOutlined />
+            </p>
+            <p className="ant-upload-text">
+              Click or drag file to this area to upload
+            </p>
+            <p className="ant-upload-hint">Upload your book PDF</p>
+          </Dragger>
         </Form.Item>
 
         <Form.Item

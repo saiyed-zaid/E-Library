@@ -134,7 +134,10 @@ const Dashboard = (props) => {
                         <p>{book.description}</p>
                       </Col>
                       <Col span={4}>
-                        <InfoCircleOutlined style={{ cursor: "pointer" }} />
+                        <InfoCircleOutlined
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleBookView(book._id)}
+                        />
                       </Col>
                       <Col span={2}>
                         <Popconfirm

@@ -62,7 +62,7 @@ export const signin = (postData) => {
       return true;
     } catch (error) {
       if (error.response) {
-        dispatch(failure(error.response.data.error));
+        message.error(error.response.data.error);
       }
     }
   };
@@ -92,8 +92,6 @@ export const fetchAuthUser = (_id, token) => {
 export const fetchAuthorBooks = (data) => {
   return async (dispatch) => {
     try {
-      //LOADING
-      //dispatch(LOADING());
       const response = await Axios.get(
         `${process.env.REACT_APP_BACKEND_URI}/books/author/${data._id}`,
         {
@@ -457,7 +455,6 @@ export const deleteCurrentRead = (deleteId, _id, token) => {
 
         return true;
       } else {
-        
         message.success(response.data.error);
         return false;
       }

@@ -36,7 +36,7 @@ const MyBooks = (props) => {
   }, []);
 
   const handleDelete = (_id) => {
-    const response = dispatch(deleteData(_id, authUser._id, authUser.token));
+    dispatch(deleteData(_id, authUser._id, authUser.token));
   };
 
   const handleEdit = (_id) => {
@@ -90,6 +90,7 @@ const MyBooks = (props) => {
           </Col>
         )} */}
           {books &&
+            books.length > 0 &&
             books.map((book) => {
               return (
                 <Col xs={24} md={4}>
@@ -107,7 +108,12 @@ const MyBooks = (props) => {
                       >
                         <img
                           alt="example"
-                          src="https://images.unsplash.com/photo-1592859372969-7ce244fb6582?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
+                          src={book.photo}
+                          onError={(e) =>
+                            (e.target.src =
+                              "https://images.unsplash.com/photo-1592859372969-7ce244fb6582?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80")
+                          }
+                          style={{ height: "200px", objectFit: "contain" }}
                         />
                       </Popconfirm>
                     }

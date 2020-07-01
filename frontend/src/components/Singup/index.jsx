@@ -94,7 +94,7 @@ class Signup extends React.Component {
     );
 
     this.setState({
-      bookCategories: bookCategories.data.books,
+      bookCategories: bookCategories.data.categories,
     });
   }
 
@@ -413,14 +413,14 @@ class Signup extends React.Component {
               extra={
                 this.props.data && this.props.data.isVerified
                   ? [
-                    <Button
+                      <Button
                         type="dashed"
                         key="console"
-                        onClick={()=>this.props.history.push('/signin')}
+                        onClick={() => this.props.history.push("/signin")}
                       >
                         Login
-                      </Button>
-                  ]
+                      </Button>,
+                    ]
                   : [
                       <Form
                         labelCol={{ span: 4 }}
