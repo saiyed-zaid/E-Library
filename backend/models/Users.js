@@ -53,8 +53,13 @@ const userSchema = new Schema({
       ref: "Books",
     },
   ],
-
   bookToReadLater: [
+    {
+      type: ObjectId,
+      ref: "Books",
+    },
+  ],
+  currentReading: [
     {
       type: ObjectId,
       ref: "Books",

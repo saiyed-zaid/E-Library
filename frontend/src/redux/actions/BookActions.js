@@ -19,6 +19,12 @@ export const GETBOOK = (data) => {
   };
 };
 
+export const SETBOOKTOREAD = (data) => {
+  return {
+    type: "SETBOOKTOREAD",
+    payload: data,
+  };
+};
 
 export const GETALLCATEGORIES = (data) => {
   return {
@@ -33,8 +39,6 @@ export const GETAUTHORS = (data) => {
     payload: data,
   };
 };
-
-
 
 export const INSERT = () => {
   return {

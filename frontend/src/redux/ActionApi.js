@@ -1,3 +1,5 @@
+import { message } from "antd";
+
 import Axios from "axios";
 import { loader, login, failure, authUser } from "./actions/userActions";
 import {
@@ -10,6 +12,7 @@ import {
   GETALLCATEGORIES,
   GETAUTHORS,
   GETBOOK,
+  SETBOOKTOREAD,
 } from "./actions/BookActions";
 //API RELATED METHODS
 export const signup = (postData) => {
@@ -320,7 +323,7 @@ export const toggleDislike = (data, _id, token) => {
   };
 };
 
-export const toggleFavourite = (data, _id, token) => {
+export const toggleFavourite = (hasfavourite, data, _id, token) => {
   return async (dispatch) => {
     try {
       //LOADING
@@ -334,6 +337,9 @@ export const toggleFavourite = (data, _id, token) => {
           },
         }
       );
+      hasfavourite
+        ? message.warning("Book Removed From Favourite List")
+        : message.success("Book Added to Favourite List");
 
       dispatch(fetchBook(data.bookId));
       dispatch(fetchAuthUser(_id, token));
@@ -346,7 +352,7 @@ export const toggleFavourite = (data, _id, token) => {
   };
 };
 
-export const toggleReadlater = (data, _id, token) => {
+export const toggleReadlater = (hasReadLater, data, _id, token) => {
   return async (dispatch) => {
     try {
       //LOADING
@@ -360,6 +366,9 @@ export const toggleReadlater = (data, _id, token) => {
           },
         }
       );
+      hasReadLater
+        ? message.warning("Book Removed From Read Later List")
+        : message.success("Book Added To Read Later List");
 
       dispatch(fetchBook(data.bookId));
       dispatch(fetchAuthUser(_id, token));
@@ -390,6 +399,68 @@ export const updatePlan = (data, _id, token) => {
       dispatch(fetchAuthUser(_id, token));
       return true;
 
+      //SUCCESS
+    } catch (error) {
+      //FAILURE
+    }
+  };
+};
+
+export const insertCurrentRead = (data, _id, token) => {
+  return async (dispatch) => {
+    try {
+      //LOADING
+      //SUCCESS
+      //dispatch(LOADING());
+      const response = await Axios.patch(
+        `${process.env.REACT_APP_BACKEND_URI}/user/book/read`,
+        data,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.canRead) {
+        fetchAuthUser(_id, token);
+        return true;
+      } else {
+        message.warning(response.data.error);
+        return false;
+      }
+    } catch (error) {
+      //FAilure
+    }
+  };
+};
+
+export const deleteCurrentRead = (deleteId, _id, token) => {
+  return async (dispatch) => {
+    try {
+      //LOADING
+      const response = await Axios.delete(
+        `${process.env.REACT_APP_BACKEND_URI}/user/book/read/${deleteId}`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.isRemoved) {
+        dispatch(fetchAuthUser(_id, token));
+
+        message.success(response.data.successText);
+
+        return true;
+      } else {
+        
+        message.success(response.data.error);
+        return false;
+      }
       //SUCCESS
     } catch (error) {
       //FAILURE

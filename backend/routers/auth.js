@@ -17,11 +17,9 @@ const { ObjectId } = require("mongodb");
 router.get("/api/user/:userId", authCheck, async (req, res, next) => {
   try {
     const user = await User.findById(req.auth._id)
-      .populate("favouriteBook", "title description")
-      .populate("bookToReadLater", "title description");
-
-    console.log("user", user);
-
+      .populate("favouriteBook", "title description reference")
+      .populate("bookToReadLater", "title description reference")
+      .populate("currentReading", "title description reference");
     return res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ error: "Something Went Wrong" });

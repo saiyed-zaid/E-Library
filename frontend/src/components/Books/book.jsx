@@ -136,13 +136,23 @@ const Book = (props) => {
 
   const handleFavourite = (event) => {
     dispatch(
-      toggleFavourite({ bookId: book._id }, authUser._id, authUser.token)
+      toggleFavourite(
+        hasFavourite,
+        { bookId: book._id },
+        authUser._id,
+        authUser.token
+      )
     );
   };
 
   const handleReadlater = (event) => {
     dispatch(
-      toggleReadlater({ bookId: book._id }, authUser._id, authUser.token)
+      toggleReadlater(
+        hasReadLater,
+        { bookId: book._id },
+        authUser._id,
+        authUser.token
+      )
     );
   };
 

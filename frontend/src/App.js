@@ -66,7 +66,6 @@ const AppRouter = (props) => {
                     } else if (authUser && authUser.role === "reader") {
                       return <Reader />;
                     } else {
-                      alert("Oops signin render");
                       return <Signin />;
                     }
                   }}

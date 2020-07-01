@@ -18,6 +18,7 @@ const authRouter = require("./routers/auth");
 const bookRouter = require("./routers/books.route");
 const planRouter = require("./routers/plans.route");
 const bookCategoryRouter = require("./routers/bookCategories.route");
+const userRouter = require("./routers/users.route");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -46,6 +47,7 @@ app.use(bookCategoryRouter);
 app.use(authRouter);
 app.use(bookRouter);
 app.use(planRouter);
+app.use(userRouter);
 
 mongoose
   .connect(process.env.MONGODB_URI, {
