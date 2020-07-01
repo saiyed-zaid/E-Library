@@ -1,29 +1,63 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { insertData } from "../../redux/ActionApi";
 
-import { PageHeader, Button, Form, Radio, Input, Select, Upload } from "antd";
+import {
+  PageHeader,
+  Button,
+  Form,
+  Radio,
+  Input,
+  Select,
+  Upload,
+  message,
+} from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 
 const Add = (props) => {
   const authUser = useSelector((state) => state.authUser.authUser);
 
+  const [reference, setReference] = useState(null);
+
   const dispatch = useDispatch();
 
   const { Dragger } = Upload;
 
+  const fileProps = {
+    name: "reference",
+    multiple: true,
+    action: `${process.env.REACT_APP_BACKEND_URI}/upload`,
+    onChange(info) {
+      const { status } = info.file;
+      if (status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (status === "done") {
+        setReference(`http://localhost:5431/upload/${info.file.name}`);
+
+        message.success(`${info.file.name} file uploaded successfully.`);
+      } else if (status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
+
   const handleSubmit = (data) => {
-    const response = dispatch(
-      insertData(data, authUser.user.token, authUser.user._id)
-    );
-    
+    data.reference = reference;
+
+    const response = dispatch(insertData(data, authUser.token, authUser._id));
+
     response && props.history.push("/mybooks");
   };
   return (
     <>
       <div className="site-page-header-ghost-wrapper">
-        <PageHeader ghost={false} title="Add book"></PageHeader>
+        <PageHeader
+          ghost={false}
+          title="Add book"
+          onBack={() => window.history.back()}
+        ></PageHeader>
       </div>
 
       <Form layout="vertical" onFinish={handleSubmit}>
@@ -50,18 +84,6 @@ const Add = (props) => {
         >
           <Input value="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
         </Form.Item>
-
-        {/* <Form.Item>
-          <Dragger>
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">
-              Click or drag file to this area to upload
-            </p>
-            <p className="ant-upload-hint">Upload your book cover image</p>
-          </Dragger>
-        </Form.Item> */}
 
         <Form.Item label="Category" name="category">
           <Select>
@@ -92,8 +114,26 @@ const Add = (props) => {
             { required: true, message: "Please input your book reference!" },
           ]}
         >
-          <Input />
+          <Dragger {...fileProps}>
+            <p className="ant-upload-drag-icon">
+              <InboxOutlined />
+            </p>
+            <p className="ant-upload-text">
+              Click or drag file to this area to upload
+            </p>
+            <p className="ant-upload-hint">Upload your book cover image</p>
+          </Dragger>
         </Form.Item>
+
+        {/* <Form.Item
+          name="reference"
+          label="Reference"
+          rules={[
+            { required: true, message: "Please input your book reference!" },
+          ]}
+        >
+          <Input />
+        </Form.Item> */}
 
         <Form.Item
           name="isOnTrueEvent"

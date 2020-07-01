@@ -6,6 +6,8 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
+const multer = require("multer");
+const path = require("path");
 
 const User = require("./models/Users");
 
@@ -21,6 +23,24 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(morgan("dev"));
 app.use(cors());
+app.use("/upload", express.static("upload"));
+
+const multerConfig = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, "upload"));
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+app.use(multer({ storage: multerConfig }).single("reference"));
+
+app.post("/api/upload", (req, res, next) => {
+  console.log("file", req.file);
+
+  res.send("uploaded");
+});
 
 app.use(bookCategoryRouter);
 app.use(authRouter);

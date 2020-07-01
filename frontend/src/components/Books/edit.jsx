@@ -29,7 +29,11 @@ const Edit = (props) => {
   return (
     <>
       <div className="site-page-header-ghost-wrapper">
-        <PageHeader ghost={false} title="Edit book"></PageHeader>
+        <PageHeader
+          ghost={false}
+          title="Edit book"
+          onBack={() => window.history.back()}
+        ></PageHeader>
       </div>
 
       <Form layout="vertical" onFinish={handleSubmit}>

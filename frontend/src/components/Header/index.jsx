@@ -4,6 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Layout, Menu, Avatar, Dropdown } from "antd";
 
+import {
+  PoweroffOutlined,
+  UserOutlined,
+  LockOutlined,
+} from "@ant-design/icons";
+
 import { GET, Logout } from "../../redux/actions/userActions";
 
 const { Header, Content } = Layout;
@@ -21,7 +27,7 @@ const Navbar = (props) => {
 
   const menu = (
     <Menu>
-      <Menu.Item>
+      <Menu.Item icon={<UserOutlined />}>
         <a
           target="_blank"
           rel="noopener noreferrer"
@@ -30,7 +36,7 @@ const Navbar = (props) => {
           Manage Profile
         </a>
       </Menu.Item>
-      <Menu.Item>
+      <Menu.Item icon={<LockOutlined />}>
         <a
           target="_blank"
           rel="noopener noreferrer"
@@ -40,7 +46,7 @@ const Navbar = (props) => {
         </a>
       </Menu.Item>
 
-      <Menu.Item danger onClick={logout}>
+      <Menu.Item icon={<PoweroffOutlined />} danger onClick={logout}>
         Logout
       </Menu.Item>
     </Menu>

@@ -46,7 +46,7 @@ router.get("/api/books/:bookId", async (req, res, next) => {
     const book = await Books.findOne({
       _id: req.params.bookId,
       status: true,
-    });
+    }).populate("comments.postedBy", "username");
 
     return res.status(200).json({ book });
   } catch (error) {

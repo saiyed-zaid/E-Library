@@ -30,17 +30,17 @@ Dashboard:
 	- random 3 from read later book list
 
 Search in library: (for reader)
-	- can search book by category, name, author and so on...
-	- pick any book, like, dislike, add as favorite, add as read Later
-	- click on book to open detail page, read all comments, add comment, like, dislike, toggle favorite, toggle read later
+	- can search book by category, name, author and so on... [DONE]
+	- pick any book, like, dislike, add as favorite, add as read Later [DONE]
+	- click on book to open detail page, read all comments, add comment, like, dislike, toggle favorite, toggle read later [DONE]
 
 - Add new book in library (for writer)
-    - same as above adding book process
+    - same as above adding book process [DONE]
 
 - my book grid (for writer)
-    - make it private, (all books are public by default)
-    - remove
-    - update details
+    - make it private, (all books are public by default) [DONE]
+    - remove [DONE]
+    - update details [DONE]
 
 
 https://medium.com/authpack/facebook-auth-with-node-js-c4bb90d03fc0

@@ -23,6 +23,7 @@ import Search from "./components/Search";
 import ErrorPage from "./components/ErrorPages/404";
 import PrivateRoute from "./components/Helper/PrivateRoute";
 import Plans from "./components/Plans";
+import ViewBook from "./components/Books/view";
 
 import store from "./redux/store";
 import { Provider, connect, useDispatch, useSelector } from "react-redux";
@@ -111,6 +112,7 @@ const AppRouter = (props) => {
                 />
 
                 {/* <Route exact path="/edit-book/:bookId" component={EditBook} /> */}
+                <Route exact path="/book/view" component={ViewBook} />
 
                 <Route exact path="/book/:bookId" component={Book} />
 
@@ -127,17 +129,7 @@ const AppRouter = (props) => {
     </div>
   );
 };
-/* 
-const mapStateToProps = (state) => {
-  return state.authUser;
-};
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    getAuthUser: () => dispatch(GET()),
-  };
-};
-*/
 const MainComponent = withRouter(AppRouter);
 
 const App = () => {

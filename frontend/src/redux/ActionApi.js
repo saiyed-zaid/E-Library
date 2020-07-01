@@ -336,7 +336,7 @@ export const toggleFavourite = (data, _id, token) => {
       );
 
       dispatch(fetchBook(data.bookId));
-      //dispatch(fetchAuthUser(_id, token));
+      dispatch(fetchAuthUser(_id, token));
       return true;
 
       //SUCCESS
@@ -362,6 +362,7 @@ export const toggleReadlater = (data, _id, token) => {
       );
 
       dispatch(fetchBook(data.bookId));
+      dispatch(fetchAuthUser(_id, token));
       return true;
 
       //SUCCESS
