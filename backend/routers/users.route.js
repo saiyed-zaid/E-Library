@@ -17,12 +17,13 @@ router.patch("/api/user/book/read", authCheck, async (req, res, next) => {
       });
     }
 
-    if (
-      user.currentReading &&
-      user.currentReading.length >= 1 &&
-      user.currentReading.indexOf(req.body.bookId) !== -1
-    ) {
-      res.status(200).json({ canRead: true });
+    if (user.currentReading && user.currentReading.length >= 1) {
+      const index = user.currentReading.findIndex((value) => {
+        return value.book.toString() === req.body.bookId;
+      });
+      if (index !== -1) {
+        res.status(200).json({ canRead: true });
+      }
     }
 
     if (user.plan === "basic" && user.currentReading) {
@@ -59,12 +60,18 @@ router.patch("/api/user/book/read", authCheck, async (req, res, next) => {
     }
 
     //when everything is alright
-    user.currentReading.push(req.body.bookId);
+    user.currentReading.push({
+      book: {
+        _id: req.body.bookId,
+      },
+      added: Date.now(),
+    });
 
     await user.save();
 
     res.status(200).json({ canRead: true });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Something went wrong..." });
   }
 });
@@ -77,7 +84,9 @@ router.delete(
     try {
       const user = await User.findById(req.auth._id);
 
-      const index = user.currentReading.indexOf(req.params.bookId);
+      const index = user.currentReading.findIndex((value) => {
+        return value.book.toString() === req.params.bookId;
+      });
 
       if (index !== -1) {
         user.currentReading.splice(index, 1);

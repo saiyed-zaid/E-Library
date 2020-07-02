@@ -455,7 +455,7 @@ export const deleteCurrentRead = (deleteId, _id, token) => {
 
         return true;
       } else {
-        message.success(response.data.error);
+        message.warning(response.data.error);
         return false;
       }
       //SUCCESS

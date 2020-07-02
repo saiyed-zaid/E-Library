@@ -67,8 +67,14 @@ const userSchema = new Schema({
   ],
   currentReading: [
     {
-      type: ObjectId,
-      ref: "Books",
+      book: {
+        type: ObjectId,
+        ref: "Books",
+      },
+      added: {
+        type: Date,
+        default: Date.now,
+      },
     },
   ],
   resetPasswordToken: {

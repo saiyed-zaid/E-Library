@@ -19,10 +19,15 @@ router.get("/api/user/:userId", authCheck, async (req, res, next) => {
     const user = await User.findById(req.auth._id)
       .populate("favouriteBook.book")
       .populate("bookToReadLater", "title description reference")
-      .populate("currentReading", "title description reference");
+      .populate("currentReading.book", "title description reference");
 
     if (user.favouriteBook.length > 0) {
       user.favouriteBook.sort(function (a, b) {
+        return new Date(a.added) - new Date(b.added);
+      });
+    }
+    if (user.currentReading.length > 0) {
+      user.currentReading.sort(function (a, b) {
         return new Date(a.added) - new Date(b.added);
       });
     }

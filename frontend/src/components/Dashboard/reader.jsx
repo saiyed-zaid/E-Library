@@ -98,7 +98,7 @@ const Dashboard = (props) => {
     }
   };
 
-  const handleContnueBookRemove = (_id) => {
+  const handleContinueBookRemove = (_id) => {
     dispatch(deleteCurrentRead(_id, authUser._id, authUser.token));
   };
 
@@ -122,43 +122,49 @@ const Dashboard = (props) => {
         <Row gutter={[16, 16]}>
           {currentReading &&
             currentReading.length > 0 &&
-            currentReading.map((book) => {
+            currentReading.map((book, index) => {
               return (
-                <Col xs={24} md={8}>
-                  <Card
-                    bordered={true}
-                    title={book.title}
-                    cover={
-                      <img
-                        alt="example"
-                        src="https://images.unsplash.com/photo-1592859372969-7ce244fb6582?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
-                      />
-                    }
-                  >
-                    <Row gutter={24}>
-                      <Col span={18}>
-                        <p>{book.description}</p>
-                      </Col>
-                      <Col span={4}>
-                        <InfoCircleOutlined
-                          style={{ cursor: "pointer" }}
-                          onClick={() => handleBookView(book._id)}
+                index <= 2 && (
+                  <Col xs={24} md={8}>
+                    <Card
+                      bordered={true}
+                      title={book.book.title}
+                      cover={
+                        <img
+                          alt="example"
+                          src="https://images.unsplash.com/photo-1592859372969-7ce244fb6582?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
                         />
-                      </Col>
-                      <Col span={2}>
-                        <Popconfirm
-                          title="Do you want to remove from this list?"
-                          onConfirm={() => handleContnueBookRemove(book._id)}
-                          onCancel={() => 1}
-                          okText="Yes"
-                          cancelText="No"
-                        >
-                          <CloseCircleOutlined style={{ cursor: "pointer" }} />
-                        </Popconfirm>
-                      </Col>
-                    </Row>
-                  </Card>
-                </Col>
+                      }
+                    >
+                      <Row gutter={24}>
+                        <Col span={18}>
+                          <p>{book.book.description}</p>
+                        </Col>
+                        <Col span={4}>
+                          <InfoCircleOutlined
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleBookView(book.book._id)}
+                          />
+                        </Col>
+                        <Col span={2}>
+                          <Popconfirm
+                            title="Do you want to remove from this list?"
+                            onConfirm={() =>
+                              handleContinueBookRemove(book.book._id)
+                            }
+                            onCancel={() => 1}
+                            okText="Yes"
+                            cancelText="No"
+                          >
+                            <CloseCircleOutlined
+                              style={{ cursor: "pointer" }}
+                            />
+                          </Popconfirm>
+                        </Col>
+                      </Row>
+                    </Card>
+                  </Col>
+                )
               );
             })}
         </Row>
