@@ -4,10 +4,12 @@ const router = express.Router();
 const authCheck = require("../middlewares/authCheck");
 
 const User = require("../models/Users");
+const Books = require("../models/Books");
 
 router.patch("/api/user/book/read", authCheck, async (req, res, next) => {
   try {
     const user = await User.findById(req.auth._id);
+    const book = await Books.findById(req.body.bookId);
 
     if (!user.plan) {
       return res.json({
@@ -66,6 +68,13 @@ router.patch("/api/user/book/read", authCheck, async (req, res, next) => {
       },
       added: Date.now(),
     });
+
+    if (book.numberOfRead.indexOf(req.auth._id) === -1) {
+      book.numberOfRead.push({
+        _id: req.auth._id,
+      });
+      await book.save();
+    }
 
     await user.save();
 

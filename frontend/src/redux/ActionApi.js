@@ -464,3 +464,27 @@ export const deleteCurrentRead = (deleteId, _id, token) => {
     }
   };
 };
+
+//Writer APIS
+
+export const FetchMostLikedBooks = (_id, token) => {
+  return async (dispatch) => {
+    //LOADING
+    try {
+      //dispatch(LOADING());
+      const response = await Axios.get(
+        `${process.env.REACT_APP_BACKEND_URI}/report/most-liked-book`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      //SUCCESS
+      dispatch(authUser(response.data));
+    } catch (error) {
+      //ERROR
+    }
+  };
+};

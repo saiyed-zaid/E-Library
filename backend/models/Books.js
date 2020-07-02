@@ -73,6 +73,10 @@ const bookSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
+  numberOfRead: {
+    type: Array,
+    ref: "User",
+  },
 });
 
 module.exports = mongoose.model("Books", bookSchema);
