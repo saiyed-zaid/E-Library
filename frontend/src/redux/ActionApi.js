@@ -488,3 +488,25 @@ export const FetchMostLikedBooks = (_id, token) => {
     }
   };
 };
+
+export const FetchMostReadBooks = (_id, token) => {
+  return async (dispatch) => {
+    //LOADING
+    try {
+      //dispatch(LOADING());
+      const response = await Axios.get(
+        `${process.env.REACT_APP_BACKEND_URI}/report/most-read-book`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      //SUCCESS
+      dispatch(authUser(response.data));
+    } catch (error) {
+      //ERROR
+    }
+  };
+};

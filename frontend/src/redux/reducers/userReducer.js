@@ -17,12 +17,37 @@ export const userReducer = (state = initState, action) => {
       };
 
     case "AUTHUSER":
-      return {
+      if (action.payload.mostLikedBooks) {
+        return {
+          ...state,
+          user: {
+            mostLikedBooks: action.payload,
+            ...state.user.mostReadBooks,
+          },
+          loading: false,
+        };
+      } else if (action.payload.mostReadBooks) {
+        return {
+          ...state,
+          user: {
+            mostReadBooks: action.payload.mostReadBooks,
+            ...state.user.mostLikedBooks,
+          },
+          loading: false,
+        };
+      } else {
+        return {
+          ...state,
+          user: action.payload,
+        };
+      }
+    /*  return {
         ...state,
+        ...state.user,
         user: action.payload,
         loading: false,
       };
-
+ */
     case "LOGOUT":
       window.localStorage.setItem("authUser", JSON.stringify({}));
       window.localStorage.removeItem("authUser");
