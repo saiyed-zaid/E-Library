@@ -22,10 +22,10 @@ Entry Will be inserted by this step :
 
 Dashboard: 
       - ( for Writer) :
-	- Top most 5 likes book listing with reader count and likes and dislikes
-	- Top most 5 reading count 
+	- Top most 5 likes book listing with reader count and likes and dislikes [DONE]
+	- Top most 5 reading count [DONE]
       - (for reader):
-	- recently 3 book read [Done]
+	- recently 3 book read [DONE]
 	- recently 3 favorite [DONE]
 	- random 3 from read later book list [DONE]
 

@@ -168,7 +168,12 @@ const SearchBooks = (props) => {
                 cover={
                   <img
                     alt="example"
-                    src="https://images.unsplash.com/photo-1592859372969-7ce244fb6582?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80"
+                    src={book.photo}
+                    onError={(e) =>
+                      (e.target.src =
+                        "https://images.unsplash.com/photo-1592859372969-7ce244fb6582?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80")
+                    }
+                    style={{ height: "200px", objectFit: "contain" }}
                   />
                 }
               >

@@ -18,8 +18,8 @@ router.get("/api/user/:userId", authCheck, async (req, res, next) => {
   try {
     const user = await User.findById(req.auth._id)
       .populate("favouriteBook.book")
-      .populate("bookToReadLater", "title description reference")
-      .populate("currentReading.book", "title description reference");
+      .populate("bookToReadLater", "title description reference photo")
+      .populate("currentReading.book", "title description reference photo");
 
     if (user.favouriteBook.length > 0) {
       user.favouriteBook.sort(function (a, b) {

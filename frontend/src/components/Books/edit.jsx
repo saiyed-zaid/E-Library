@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { updateData } from "../../redux/ActionApi";
+import { updateData, fetchCategories } from "../../redux/ActionApi";
 
 import {
   PageHeader,
@@ -19,16 +19,21 @@ import { InboxOutlined } from "@ant-design/icons";
 const Edit = (props) => {
   const dispatch = useDispatch();
 
-  const [photo, setPhoto] = useState("");
-  const [reference, setReference] = useState("");
-
   const authUser = useSelector((state) => state.authUser.authUser);
+
+  const categories = useSelector((state) => state.books.categories);
 
   const books = useSelector((state) => {
     return state.books.books;
   });
-
   const book = books.filter((book) => book._id === props.match.params.bookId);
+
+  const [photo, setPhoto] = useState(book[0] ? book[0].photo : " ");
+  const [reference, setReference] = useState(book[0] ? book[0].reference : " ");
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, []);
 
   const { Dragger } = Upload;
 
@@ -94,7 +99,6 @@ const Edit = (props) => {
         <Form.Item
           name="title"
           label="Title"
-          rules={[{ required: true, message: "Please input title!" }]}
           initialValue={book[0] && book[0].title}
         >
           <Input />
@@ -103,17 +107,12 @@ const Edit = (props) => {
         <Form.Item
           name="description"
           label="Description"
-          rules={[{ required: true, message: "Please input description!" }]}
           initialValue={book[0] && book[0].description}
         >
           <Input.TextArea />
         </Form.Item>
 
-        <Form.Item
-          name="photo"
-          label="Cover Photo"
-          rules={[{ required: true, message: "Please input your book image!" }]}
-        >
+        <Form.Item name="photo" label="Cover Photo">
           <Dragger {...photoProps}>
             <p className="ant-upload-drag-icon">
               <InboxOutlined />
@@ -135,29 +134,28 @@ const Edit = (props) => {
         </Form.Item> */}
 
         <Form.Item label="Category" name="category">
-          <Select>
-            <Select.Option value="5ef073dcb00a922548270939">
-              Category 1
-            </Select.Option>
-            <Select.Option value="5ef073dcb00a922548270939">
-              Category 2
-            </Select.Option>
-            <Select.Option value="5ef073dcb00a922548270939">
-              Category 3
-            </Select.Option>
+          <Select defaultValue={book[0] && book[0].category}>
+            {categories &&
+              categories.length > 0 &&
+              categories.map((category) => {
+                return (
+                  <Select.Option value={category._id}>
+                    {category.name}
+                  </Select.Option>
+                );
+              })}
           </Select>
         </Form.Item>
 
         <Form.Item
           name="pages"
           label="Number of pages"
-          rules={[{ required: true, message: "Please input your book pages!" }]}
           initialValue={book[0] && book[0].pages}
         >
           <Input />
         </Form.Item>
 
-        <Form.Item
+        {/*  <Form.Item
           name="reference"
           label="Reference"
           rules={[
@@ -166,13 +164,9 @@ const Edit = (props) => {
           initialValue={book[0] && book[0].reference}
         >
           <Input />
-        </Form.Item>
+        </Form.Item> */}
 
-        <Form.Item
-          name="reference"
-          label="Reference"
-          rules={[{ required: true, message: "Please input your book PDF!" }]}
-        >
+        <Form.Item name="reference" label="Reference">
           <Dragger {...referenceProps}>
             <p className="ant-upload-drag-icon">
               <InboxOutlined />
@@ -183,22 +177,15 @@ const Edit = (props) => {
             <p className="ant-upload-hint">Upload your book PDF</p>
           </Dragger>
         </Form.Item>
-
-        <Form.Item
-          name="isOnTrueEvent"
-          label="Is on True Event"
-          rules={[{ required: true, message: "Please select event!" }]}
-        >
-          <Radio.Group>
-            <Radio value="1" checked={book[0] && book[0].isOnTrueEvent}>
-              Yes
-            </Radio>
-            <Radio value="0" checked={book[0] && book[0].isOnTrueEvent}>
-              No
-            </Radio>
+        <Form.Item name="isOnTrueEvent" label="Is on True Event">
+          <Radio.Group
+            defaultValue={book[0] && book[0].isOnTrueEvent ? "1" : "0"}
+          >
+            <Radio value="1">Yes</Radio>
+            <Radio value="0">No</Radio>
           </Radio.Group>
         </Form.Item>
-
+        {/* //book[0] && book[0].isOnTrueEvent */}
         <Form.Item>
           <Button type="primary" htmlType="submit">
             Submit
