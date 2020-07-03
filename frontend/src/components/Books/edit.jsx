@@ -42,12 +42,13 @@ const Edit = (props) => {
     multiple: true,
     action: `${process.env.REACT_APP_BACKEND_URI}/upload`,
     onChange(info) {
-      const { status } = info.file;
+      const { status, response } = info.file;
+
       if (status !== "uploading") {
         console.log(info.file, info.fileList);
       }
-      if (status === "done") {
-        setPhoto(`http://localhost:5431/upload/${info.file.name}`);
+      if (status === "done" && response.isUploaded) {
+        setPhoto(response.public_uri);
 
         message.success(`${info.file.name} file uploaded successfully.`);
       } else if (status === "error") {
@@ -61,12 +62,13 @@ const Edit = (props) => {
     multiple: true,
     action: `${process.env.REACT_APP_BACKEND_URI}/upload`,
     onChange(info) {
-      const { status } = info.file;
+      const { status, response } = info.file;
+
       if (status !== "uploading") {
         console.log(info.file, info.fileList);
       }
-      if (status === "done") {
-        setReference(`http://localhost:5431/upload/${info.file.name}`);
+      if (status === "done" && response.isUploaded) {
+        setPhoto(response.public_uri);
 
         message.success(`${info.file.name} file uploaded successfully.`);
       } else if (status === "error") {

@@ -32,7 +32,7 @@ const multerConfig = multer.diskStorage({
     cb(null, path.join(__dirname, "upload"));
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname);
+    cb(null, Date.now() + file.originalname);
   },
 });
 
@@ -44,10 +44,12 @@ app.use(
 );
 
 app.post("/api/upload", (req, res, next) => {
+  console.log(req.files.photo[0].filename);
   //SEND PUBLIC URL
-  console.log("file", req.file);
-
-  res.send("uploaded");
+  return res.json({
+    isUploaded: true,
+    public_uri: `${process.env.SERVER_URI}/upload/${req.files.photo[0].filename}`,
+  });
 });
 
 app.use(bookCategoryRouter);

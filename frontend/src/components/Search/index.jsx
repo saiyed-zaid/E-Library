@@ -1,20 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-import {
-  PageHeader,
-  Input,
-  Select,
-  Card,
-  Popconfirm,
-  Col,
-  Row,
-  Form,
-} from "antd";
-import {
-  EditOutlined,
-  DeleteOutlined,
-  InfoCircleOutlined,
-} from "@ant-design/icons";
+import { PageHeader, Input, Select, Card, Col, Row, Form } from "antd";
+import { InfoCircleOutlined } from "@ant-design/icons";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -22,7 +9,6 @@ import {
   fetchBooks,
   fetchCategories,
   fetchAuthors,
-  fetchAuthorBooks,
 } from "../../redux/ActionApi";
 
 const { Search } = Input;
