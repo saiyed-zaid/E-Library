@@ -21,8 +21,8 @@ export const userReducer = (state = initState, action) => {
         return {
           ...state,
           user: {
-            mostLikedBooks: action.payload,
-            ...state.user.mostReadBooks,
+            mostLikedBooks: action.payload.mostLikedBooks,
+            mostReadBooks: state.user.mostReadBooks,
           },
           loading: false,
         };
@@ -31,7 +31,7 @@ export const userReducer = (state = initState, action) => {
           ...state,
           user: {
             mostReadBooks: action.payload.mostReadBooks,
-            ...state.user.mostLikedBooks,
+            mostLikedBooks: state.user.mostLikedBooks,
           },
           loading: false,
         };

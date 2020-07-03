@@ -18,7 +18,7 @@ Entry Will be inserted by this step :
 - Login
       - Login with username / email and password ( or login with Google or Facebook)
 
-- Forgot Password
+- Forgot Password[DONE]
 
 Dashboard: 
       - ( for Writer) :
