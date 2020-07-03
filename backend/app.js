@@ -44,12 +44,18 @@ app.use(
 );
 
 app.post("/api/upload", (req, res, next) => {
-  console.log(req.files.photo[0].filename);
   //SEND PUBLIC URL
-  return res.json({
-    isUploaded: true,
-    public_uri: `${process.env.SERVER_URI}/upload/${req.files.photo[0].filename}`,
-  });
+  if (req.files.photo && req.files.photo[0]) {
+    return res.json({
+      isUploaded: true,
+      public_uri: `${process.env.SERVER_URI}/upload/${req.files.photo[0].filename}`,
+    });
+  } else if (req.files.reference && req.files.reference[0]) {
+    return res.json({
+      isUploaded: true,
+      public_uri: `${process.env.SERVER_URI}/upload/${req.files.reference[0].filename}`,
+    });
+  }
 });
 
 app.use(bookCategoryRouter);

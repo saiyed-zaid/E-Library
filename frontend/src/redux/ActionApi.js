@@ -251,6 +251,7 @@ export const insertData = (data, token, _id) => {
       dispatch(INSERT());
       return true;
     } catch (error) {
+      message.error(error.response.data.error);
       //FAilure
     }
   };
@@ -272,10 +273,13 @@ export const deleteData = (deleteId, _id, token) => {
         }
       );
       dispatch(fetchAuthorBooks({ _id, token }));
+      message.warning("Record Deleted Successfully");
       return true;
       //SUCCESS
     } catch (error) {
       //FAILURE
+      message.error(error.response.data.error);
+      return false;
     }
   };
 };
@@ -296,6 +300,7 @@ export const updateData = (data, updateId, _id, token) => {
       );
 
       dispatch(fetchAuthorBooks({ _id, token }));
+      message.success("Data Updated Successfully");
       return true;
 
       //SUCCESS

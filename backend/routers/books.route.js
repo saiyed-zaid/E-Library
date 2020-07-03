@@ -87,6 +87,7 @@ router.post(
     body("photo").notEmpty().withMessage("Photo is required"),
     body("isOnTrueEvent").notEmpty().withMessage("True Event is required"),
   ],
+  authCheck,
   async (req, res, next) => {
     const errors = validationResult(req);
     try {
@@ -94,7 +95,7 @@ router.post(
 
       if (!userExists) {
         return res.status(401).json({
-          error: "User Not Exists",
+          error: "User Not Existss",
         });
       } else {
         if (userExists.isVerified !== true) {
