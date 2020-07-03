@@ -1,11 +1,6 @@
 import React, { useEffect } from "react";
-import { Row, Col, Card, Layout, Statistic } from "antd";
-import {
-  LikeTwoTone,
-  DislikeTwoTone,
-  BookTwoTone,
-  LikeOutlined,
-} from "@ant-design/icons";
+import { Row, Col, Card, Layout, Statistic, Skeleton } from "antd";
+import { LikeTwoTone, DislikeTwoTone, BookTwoTone } from "@ant-design/icons";
 import { withRouter } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +16,8 @@ const Dashboard = (props) => {
 
   const dispatch = useDispatch();
   const authUser = useSelector((state) => state.authUser.authUser);
+
+  const globalState = useSelector((state) => state.global);
 
   const mostLikedBooks = useSelector(
     (state) => state.authUser.user.mostLikedBooks
@@ -51,7 +48,10 @@ const Dashboard = (props) => {
       <div className="site-card-wrapper">
         <h1>Top 3 Liked Books</h1>
         <Row gutter={[16, 16]}>
-          {mostLikedBooks &&
+          {globalState.loading && <Skeleton active />}
+
+          {!globalState.loading &&
+            mostLikedBooks &&
             mostLikedBooks.length > 0 &&
             mostLikedBooks.map((book) => {
               return (
@@ -105,7 +105,10 @@ const Dashboard = (props) => {
       <div className="site-card-wrapper">
         <h1>Top 3 Reading Books</h1>
         <Row gutter={[16, 16]}>
-          {mostReadBooks &&
+          {globalState.loading && <Skeleton active />}
+
+          {!globalState.loading &&
+            mostReadBooks &&
             mostReadBooks.length > 0 &&
             mostReadBooks.map((book) => {
               return (

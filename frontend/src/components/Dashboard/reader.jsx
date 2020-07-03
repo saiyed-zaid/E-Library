@@ -11,6 +11,7 @@ import {
   Empty,
   Button,
   message,
+  Skeleton,
 } from "antd";
 import {
   LikeTwoTone,
@@ -43,6 +44,8 @@ const Dashboard = (props) => {
   const authUser = useSelector((state) => state.authUser.authUser);
 
   const user = useSelector((state) => state.authUser.user);
+
+  const globalState = useSelector((state) => state.global);
 
   useEffect(() => {
     dispatch(fetchAuthUser(authUser._id, authUser.token));
@@ -106,6 +109,8 @@ const Dashboard = (props) => {
     <>
       <div className="site-card-wrapper">
         <h1>Contiue Reading...</h1>
+        {globalState.loading && <Skeleton active />}
+
         {currentReading && currentReading.length <= 0 && (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -120,7 +125,8 @@ const Dashboard = (props) => {
           </Empty>
         )}
         <Row gutter={[16, 16]}>
-          {currentReading &&
+          {!globalState.loading &&
+            currentReading &&
             currentReading.length > 0 &&
             currentReading.map((book, index) => {
               return (
@@ -177,6 +183,8 @@ const Dashboard = (props) => {
 
       <div className="site-card-wrapper">
         <h1>Favourite Books</h1>
+        {globalState.loading && <Skeleton active />}
+
         {favouriteBooks && favouriteBooks.length <= 0 && (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -191,7 +199,8 @@ const Dashboard = (props) => {
           </Empty>
         )}
         <Row gutter={[16, 16]}>
-          {favouriteBooks &&
+          {!globalState.loading &&
+            favouriteBooks &&
             favouriteBooks.map((book, index) => {
               return (
                 index <= 2 && (
@@ -238,6 +247,8 @@ const Dashboard = (props) => {
 
       <div className="site-card-wrapper">
         <h1>Later Read Book List</h1>
+        {globalState.loading && <Skeleton active />}
+
         {ReadlaterBooks && ReadlaterBooks.length <= 0 && (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -252,7 +263,8 @@ const Dashboard = (props) => {
           </Empty>
         )}
         <Row gutter={[16, 16]}>
-          {ReadlaterBooks &&
+          {!globalState.loading &&
+            ReadlaterBooks &&
             ReadlaterBooks.length >= 0 &&
             ReadlaterBooks.map((book) => {
               return (

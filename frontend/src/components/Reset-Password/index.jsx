@@ -1,11 +1,21 @@
 import React from "react";
-import { Layout, Form, Input, Button } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
-const ResetPassword = () => {
-  const { Content } = Layout;
+import { useDispatch } from "react-redux";
+
+import { Form, Input, Button } from "antd";
+
+import { resetPassword } from "../../redux";
+import { withRouter } from "react-router-dom";
+
+const ResetPassword = (props) => {
+  const dispatch = useDispatch();
+
+  const resetPasswordToken = props.match.params.token;
+
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
+
+    dispatch(resetPassword({ password: values.password, resetPasswordToken }));
   };
   const layout = {
     labelCol: {
@@ -35,22 +45,37 @@ const ResetPassword = () => {
               required: true,
               message: "Please input password",
             },
+            {
+              min: 6,
+              message: "Min. 6 character required",
+            },
           ]}
         >
-          <Input />
+          <Input.Password />
         </Form.Item>
 
         <Form.Item
           label="Confirm Password"
           name="passwordConfirmation"
+          dependencies={["password"]}
           rules={[
             {
               required: true,
               message: "Please input confirm password",
             },
+            ({ getFieldValue }) => ({
+              validator(rule, value) {
+                if (!value || getFieldValue("password") === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(
+                  "The two passwords that you entered do not match!"
+                );
+              },
+            }),
           ]}
         >
-          <Input />
+          <Input.Password />
         </Form.Item>
 
         <Form.Item>
@@ -66,4 +91,4 @@ const ResetPassword = () => {
     </>
   );
 };
-export default ResetPassword;
+export default withRouter(ResetPassword);

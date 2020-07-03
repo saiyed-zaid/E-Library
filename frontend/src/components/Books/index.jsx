@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { Document, Page } from "react-pdf";
 
-import { Row, Col, Card, PageHeader, Button, Popconfirm, Avatar } from "antd";
+import { Row, Col, Card, PageHeader, Button, Popconfirm, Skeleton } from "antd";
 import {
   EyeOutlined,
   EditOutlined,
@@ -10,7 +10,7 @@ import {
   EyeInvisibleOutlined,
 } from "@ant-design/icons";
 
-import { connect, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   fetchAuthorBooks,
@@ -18,14 +18,14 @@ import {
   updateData,
 } from "../../redux/ActionApi";
 
-import { Redirect } from "react-router-dom";
-
 const { Meta } = Card;
 
 const MyBooks = (props) => {
   const dispatch = useDispatch();
 
   const [isViewed, setIsViewed] = useState(false);
+
+  const globalState = useSelector((state) => state.global);
 
   const authUser = useSelector((state) => state.authUser.authUser);
 
@@ -89,7 +89,10 @@ const MyBooks = (props) => {
             </Card>
           </Col>
         )} */}
-          {books &&
+          {globalState.loading && <Skeleton active />}
+          
+          {!globalState.loading &&
+            books &&
             books.length > 0 &&
             books.map((book) => {
               return (

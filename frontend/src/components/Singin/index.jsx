@@ -2,12 +2,14 @@ import React from "react";
 import { Link, withRouter } from "react-router-dom";
 import { Alert, Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { connect, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { signin } from "../../redux/ActionApi";
 
 const Signin = (props) => {
   const dispatch = useDispatch();
+
+  const globalState = useSelector((state) => state.global);
 
   const onHandleSubmit = async (values) => {
     try {
@@ -80,7 +82,7 @@ const Signin = (props) => {
             type="primary"
             htmlType="submit"
             className="login-form-button"
-            loading={props.loading}
+            loading={globalState.loading}
           >
             Log in
           </Button>

@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  Link,
   withRouter,
 } from "react-router-dom";
 import { Layout, Menu, Avatar, Dropdown } from "antd";
@@ -26,11 +25,9 @@ import Plans from "./components/Plans";
 import ViewBook from "./components/Books/view";
 
 import store from "./redux/store";
-import { Provider, connect, useDispatch, useSelector } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 
-import { GET, Logout } from "./redux/actions/userActions";
-
-const { Header, Content } = Layout;
+const { Content } = Layout;
 
 const AppRouter = (props) => {
   const dispatch = useDispatch();
@@ -80,7 +77,7 @@ const AppRouter = (props) => {
                   component={ForgetPassword}
                 />
 
-                <Route exact path="/reset-password" component={ResetPassword} />
+                <Route exact path="/reset-password/:token" component={ResetPassword} />
 
                 {/* <Route exact path="/mybooks" component={MyBooks} /> */}
 

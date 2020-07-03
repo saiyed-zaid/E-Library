@@ -246,15 +246,17 @@ router.patch("/api/user/verification/:userId", async (req, res, next) => {
   }
 });
 
-router.post("/api/forget-Password", async (req, res, next) => {
-  const { email } = req.body;
+router.post("/api/forget-password", async (req, res, next) => {
+  const { username } = req.body;
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({
+      $or: [{ username }, { email: username }],
+    });
 
     if (!user) {
       return res
-        .status(402)
-        .json({ error: "User with this email does not exists" });
+        .status(404)
+        .json({ error: "User with this username / email does not exists" });
     }
 
     //sign token
@@ -264,10 +266,10 @@ router.post("/api/forget-Password", async (req, res, next) => {
 
     const emailData = {
       from: "zss@narola.email",
-      to: email,
+      to: "zss@narola.email",
       subject: "Password Reset Instructions",
-      text: `Please use the following link to reset your password: ${process.env.CLIENT_URL}/reset-password/${token}`,
-      html: `<p>Please use the following link to reset your password:</p> <a href='${process.env.CLIENT_URL}/reset-password/${token}'>click here.</a>`,
+      text: `Please use the following link to reset your password: ${process.env.REACT_APP_URI}/reset-password/${token}`,
+      html: `<p>Please use the following link to reset your password:</p> <a href='${process.env.REACT_APP_URI}/reset-password/${token}'>click here.</a>`,
     };
 
     await user.updateOne({
@@ -277,7 +279,7 @@ router.post("/api/forget-Password", async (req, res, next) => {
     mailer(emailData);
 
     return res.status(200).json({
-      message: `Email has been sent to ${email}. Follow the instructions to reset your password.`,
+      message: `Email has been sent to zss@narola.email. Follow the instructions to reset your password.`,
     });
   } catch (error) {
     res.status(500).json({ error: "Something Went Wrong" });
@@ -287,14 +289,15 @@ router.post("/api/forget-Password", async (req, res, next) => {
 router.patch(
   "/api/reset-password",
   [
-    body("newPassword").notEmpty().withMessage("This field is required"),
-    body("newPassword")
+    body("password").notEmpty().withMessage("This field is required"),
+    body("password")
       .isLength({ min: 6 })
       .withMessage("Password must be 6 character long."),
   ],
   async (req, res) => {
+    console.log(req.body);
     const errors = validationResult(req);
-    const { resetPasswordToken, newPassword } = req.body;
+    const { resetPasswordToken, password } = req.body;
 
     if (!errors.isEmpty()) {
       const err = errors.array()[0].msg;
@@ -307,9 +310,17 @@ router.patch(
     try {
       const user = await User.findOne({ resetPasswordToken });
 
+      if (!user) {
+        return res.status(404).json({
+          error: "Hmmm... Your Reset Password Link Might Expired.",
+        });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+
       const updatedFields = {
-        password: md5(newPassword),
-        resetPasswordLink: "",
+        password: hashedPassword,
+        resetPasswordToken: "",
       };
 
       user.updated = Date.now();
@@ -318,11 +329,11 @@ router.patch(
 
       await userData.save();
 
-      res.status(200).json({
+      return res.status(200).json({
         message: `Great! Now you can login with your new password.`,
       });
     } catch (error) {
-      res.status(500).json({ error: "Something went wrong...." });
+      return res.status(500).json({ error: "Something went wrong...." });
     }
   }
 );

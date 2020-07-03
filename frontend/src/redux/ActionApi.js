@@ -1,10 +1,14 @@
-import { message } from "antd";
+import React from "react";
+import { message, notification } from "antd";
+
+import { SmileOutlined } from "@ant-design/icons";
 
 import Axios from "axios";
+
 import { loader, login, failure, authUser } from "./actions/userActions";
+
 import {
   GET,
-  LOADING,
   INSERT,
   DELETE,
   SUCCESS,
@@ -14,6 +18,8 @@ import {
   GETBOOK,
   SETBOOKTOREAD,
 } from "./actions/BookActions";
+
+import { LOADING, SUCCESSS } from "./actions/GlobalActions";
 //API RELATED METHODS
 export const signup = (postData) => {
   return async (dispatch) => {
@@ -28,7 +34,6 @@ export const signup = (postData) => {
     dispatch(SUCCESS(response.data));
     //Dispatch success
 
-    console.log("asd", response);
     //API REQUEST
   };
 };
@@ -43,15 +48,13 @@ export const verifyAccount = (postData) => {
     );
 
     dispatch(SUCCESS(response.data));
-
-    console.log("verification response", response);
   };
 };
 
 export const signin = (postData) => {
   return async (dispatch) => {
     try {
-      //dispatch(LOADING());
+      dispatch(LOADING());
 
       const response = await Axios.post(
         `${process.env.REACT_APP_BACKEND_URI}/signin`,
@@ -59,11 +62,63 @@ export const signin = (postData) => {
       );
 
       dispatch(login(response.data));
+      dispatch(SUCCESSS());
       return true;
     } catch (error) {
       if (error.response) {
         message.error(error.response.data.error);
+        dispatch(SUCCESSS());
       }
+    }
+  };
+};
+
+export const forgetPassword = (data) => {
+  return async (dispatch) => {
+    try {
+      const response = await Axios.post(
+        `${process.env.REACT_APP_BACKEND_URI}/forget-password`,
+        data,
+        {
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+
+      notification["success"]({
+        message: "Reset Password",
+        description: response.data.message,
+        duration: 0,
+        icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+      });
+    } catch (error) {
+      message.warning(error.response.data.error);
+    }
+  };
+};
+
+export const resetPassword = (data) => {
+  return async (dispatch) => {
+    try {
+      const response = await Axios.patch(
+        `${process.env.REACT_APP_BACKEND_URI}/reset-password`,
+        data,
+        {
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+
+      notification["success"]({
+        message: "Reset Password",
+        description: response.data.message,
+        duration: 0,
+        icon: <SmileOutlined style={{ color: "#108ee9" }} />,
+      });
+    } catch (error) {
+      message.warning(error.response.data.error);
     }
   };
 };
@@ -72,6 +127,7 @@ export const fetchAuthUser = (_id, token) => {
   return async (dispatch) => {
     try {
       //LOADING
+      dispatch(LOADING());
       const response = await Axios.get(
         `${process.env.REACT_APP_BACKEND_URI}/user/${_id}`,
         {
@@ -82,6 +138,7 @@ export const fetchAuthUser = (_id, token) => {
         }
       );
       dispatch(authUser(response.data));
+      dispatch(SUCCESSS());
       //SUCCESS
     } catch (error) {
       //FAILURE
@@ -92,6 +149,7 @@ export const fetchAuthUser = (_id, token) => {
 export const fetchAuthorBooks = (data) => {
   return async (dispatch) => {
     try {
+      dispatch(LOADING());
       const response = await Axios.get(
         `${process.env.REACT_APP_BACKEND_URI}/books/author/${data._id}`,
         {
@@ -103,6 +161,7 @@ export const fetchAuthorBooks = (data) => {
       );
       //SUCCESS
       dispatch(GET(response.data.books));
+      dispatch(SUCCESSS());
     } catch (error) {
       //ERROR
     }
@@ -471,7 +530,7 @@ export const FetchMostLikedBooks = (_id, token) => {
   return async (dispatch) => {
     //LOADING
     try {
-      //dispatch(LOADING());
+      dispatch(LOADING());
       const response = await Axios.get(
         `${process.env.REACT_APP_BACKEND_URI}/report/most-liked-book`,
         {
@@ -483,6 +542,7 @@ export const FetchMostLikedBooks = (_id, token) => {
       );
       //SUCCESS
       dispatch(authUser(response.data));
+      dispatch(SUCCESSS());
     } catch (error) {
       //ERROR
     }
@@ -493,7 +553,7 @@ export const FetchMostReadBooks = (_id, token) => {
   return async (dispatch) => {
     //LOADING
     try {
-      //dispatch(LOADING());
+      dispatch(LOADING());
       const response = await Axios.get(
         `${process.env.REACT_APP_BACKEND_URI}/report/most-read-book`,
         {
@@ -505,6 +565,7 @@ export const FetchMostReadBooks = (_id, token) => {
       );
       //SUCCESS
       dispatch(authUser(response.data));
+      dispatch(SUCCESSS());
     } catch (error) {
       //ERROR
     }

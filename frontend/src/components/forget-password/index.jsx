@@ -1,12 +1,21 @@
 import React from "react";
-import { Layout, Form, Input, Button } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+
+import { useDispatch } from "react-redux";
+
+import { Form, Input, Button } from "antd";
+import { UserOutlined } from "@ant-design/icons";
+
+import { forgetPassword } from "../../redux";
 
 const ForgetPassword = () => {
-  const { Content } = Layout;
+  const dispatch = useDispatch();
+  
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
+
+    dispatch(forgetPassword(values));
   };
+
   const layout = {
     labelCol: {
       span: 8,
@@ -15,6 +24,7 @@ const ForgetPassword = () => {
       span: 8,
     },
   };
+
   return (
     <>
       <h1>Forget Password</h1>

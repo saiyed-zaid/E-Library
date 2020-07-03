@@ -271,6 +271,10 @@ class Signup extends React.Component {
                     required: true,
                     message: "Please input your password!",
                   },
+                  {
+                    min: 6,
+                    message: "Min. 6 character required",
+                  },
                 ]}
               >
                 <Input.Password />
@@ -279,11 +283,22 @@ class Signup extends React.Component {
               <Form.Item
                 label="Confirm Password"
                 name="passwordConfirmation"
+                dependencies={["password"]}
                 rules={[
                   {
                     required: true,
                     message: "Please input confirm password!",
                   },
+                  ({ getFieldValue }) => ({
+                    validator(rule, value) {
+                      if (!value || getFieldValue("password") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        "The two passwords that you entered do not match!"
+                      );
+                    },
+                  }),
                 ]}
               >
                 <Input.Password />
