@@ -5,13 +5,11 @@ import { SmileOutlined } from "@ant-design/icons";
 
 import Axios from "axios";
 
-import { loader, login, failure, authUser } from "./actions/userActions";
+import { login, authUser } from "./actions/userActions";
 
 import {
   GET,
   INSERT,
-  DELETE,
-  SUCCESS,
   GETALLBOOKS,
   GETALLCATEGORIES,
   GETAUTHORS,
@@ -23,31 +21,30 @@ import { LOADING, SUCCESSS } from "./actions/GlobalActions";
 //API RELATED METHODS
 export const signup = (postData) => {
   return async (dispatch) => {
-    //LOADER
+    try {
+      dispatch(LOADING());
+      const response = await Axios.post(
+        `${process.env.REACT_APP_BACKEND_URI}/signup`,
+        postData
+      );
 
-    dispatch(loader());
-    const response = await Axios.post(
-      `${process.env.REACT_APP_BACKEND_URI}/signup`,
-      postData
-    );
-
-    dispatch(SUCCESS(response.data));
-    //Dispatch success
-
-    //API REQUEST
+      dispatch(SUCCESSS());
+    } catch (error) {}
   };
 };
 
 export const verifyAccount = (postData) => {
   return async (dispatch) => {
-    dispatch(loader());
+    try {
+      dispatch(LOADING());
 
-    let response = await Axios.patch(
-      `${process.env.REACT_APP_BACKEND_URI}/user/verification/${postData._id}`,
-      postData
-    );
+      const response = await Axios.patch(
+        `${process.env.REACT_APP_BACKEND_URI}/user/verification/${postData._id}`,
+        postData
+      );
 
-    dispatch(SUCCESS(response.data));
+      dispatch(SUCCESSS());
+    } catch (error) {}
   };
 };
 
@@ -204,12 +201,13 @@ export const fetchCategories = () => {
   return async (dispatch) => {
     //LOADING
     try {
-      //dispatch(LOADING());
+      dispatch(LOADING());
       const response = await Axios.get(
         `${process.env.REACT_APP_BACKEND_URI}/book/categories`
       );
       //SUCCESS
       dispatch(GETALLCATEGORIES(response.data.categories));
+      dispatch(SUCCESSS());
     } catch (error) {
       //ERROR
     }
@@ -220,12 +218,13 @@ export const fetchAuthors = () => {
   return async (dispatch) => {
     //LOADING
     try {
-      //dispatch(LOADING());
+      dispatch(LOADING());
       const response = await Axios.get(
         `${process.env.REACT_APP_BACKEND_URI}/book/authors`
       );
       //SUCCESS
       dispatch(GETAUTHORS(response.data.authors));
+      dispatch(SUCCESSS());
     } catch (error) {
       //ERROR
     }

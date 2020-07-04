@@ -89,7 +89,6 @@ const Dashboard = (props) => {
 
   const handleBookRead = async (_id, url) => {
     //dispatch(SETBOOKTOREAD({ _id, url }));
-
     const response = await dispatch(
       insertCurrentRead({ bookId: _id, url }, authUser._id, authUser.token)
     );
@@ -136,15 +135,25 @@ const Dashboard = (props) => {
                       bordered={true}
                       title={book.book.title}
                       cover={
-                        <img
-                          alt="example"
-                          src={book.book.photo}
-                          onError={(e) =>
-                            (e.target.src =
-                              "https://images.unsplash.com/photo-1592859372969-7ce244fb6582?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80")
+                        <Popconfirm
+                          title="Do you want to read?"
+                          onConfirm={() =>
+                            handleBookRead(book.book._id, book.book.reference)
                           }
-                          style={{ height: "200px", objectFit: "contain" }}
-                        />
+                          onCancel={() => 1}
+                          okText="Yes"
+                          cancelText="No"
+                        >
+                          <img
+                            alt="example"
+                            src={book.book.photo}
+                            onError={(e) =>
+                              (e.target.src =
+                                "https://images.unsplash.com/photo-1592859372969-7ce244fb6582?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80")
+                            }
+                            style={{ height: "200px", objectFit: "contain" }}
+                          />
+                        </Popconfirm>
                       }
                     >
                       <Row gutter={24}>
@@ -212,7 +221,26 @@ const Dashboard = (props) => {
                         book.book.title.slice(1)
                       }
                       cover={
-                        <img
+                        <Popconfirm
+                          title="Do you want to read?"
+                          onConfirm={() =>
+                            handleBookRead(book.book._id, book.book.reference)
+                          }
+                          onCancel={() => 1}
+                          okText="Yes"
+                          cancelText="No"
+                        >
+                          <img
+                            alt="example"
+                            src={book.book.photo}
+                            onError={(e) =>
+                              (e.target.src =
+                                "https://images.unsplash.com/photo-1592859372969-7ce244fb6582?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80")
+                            }
+                            style={{ height: "200px", objectFit: "contain" }}
+                          />
+                        </Popconfirm>
+                        /*  <img
                           alt="example"
                           src={book.book.photo}
                           onError={(e) =>
@@ -220,7 +248,7 @@ const Dashboard = (props) => {
                               "https://images.unsplash.com/photo-1592859372969-7ce244fb6582?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80")
                           }
                           style={{ height: "200px", objectFit: "contain" }}
-                        />
+                        /> */
                       }
                     >
                       <Row gutter={24}>

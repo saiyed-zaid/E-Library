@@ -73,12 +73,7 @@ export const userReducer = (state = initState, action) => {
         authUser: action.payload,
         loading: false,
       };
-    case "FAILURE":
-      return {
-        ...state,
-        error: action.payload,
-        loading: false,
-      };
+
     default:
       return state;
   }

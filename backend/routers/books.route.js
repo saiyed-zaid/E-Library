@@ -47,7 +47,6 @@ router.get("/api/books/:bookId", async (req, res, next) => {
       _id: req.params.bookId,
       status: true,
     }).populate("comments.postedBy", "username");
-
     return res.status(200).json({ book });
   } catch (error) {
     res.status(500).json({ error: "Something Went Wrong..." });
@@ -177,6 +176,12 @@ router.patch("/api/book/comment", authCheck, async (req, res, next) => {
       created: Date.now(),
       text: req.body.comment,
     });
+
+    book.ratings.push({
+      user: req.auth._id,
+      rate: req.body.ratings,
+    });
+
     await book.save();
 
     return res.status(200).json({ book });

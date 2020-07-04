@@ -21,6 +21,7 @@ router.get("/api/user/:userId", authCheck, async (req, res, next) => {
       .populate("bookToReadLater", "title description reference photo")
       .populate("currentReading.book", "title description reference photo");
 
+    user.password = undefined;
     if (user.favouriteBook.length > 0) {
       user.favouriteBook.sort(function (a, b) {
         return new Date(a.added) - new Date(b.added);
@@ -146,16 +147,12 @@ router.post(
   async (req, res, next) => {
     try {
       const userExists = await User.findOne({
-        $and: [
+        $or: [
           {
-            $or: [
-              {
-                email: req.body.email,
-              },
-              {
-                username: req.body.username,
-              },
-            ],
+            email: req.body.username,
+          },
+          {
+            username: req.body.username,
           },
         ],
       })
@@ -175,7 +172,7 @@ router.post(
 
       if (!match) {
         return res.status(401).json({
-          error: "Password is Incorrect..",
+          error: "Username or Password is Incorrect..",
         });
       }
 

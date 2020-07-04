@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import {
-  List,
+  Rate,
   Avatar,
   Space,
   Comment,
@@ -28,6 +28,7 @@ import {
   ReadOutlined,
   ReadFilled,
   HeartFilled,
+  SmileOutlined,
 } from "@ant-design/icons";
 import moment from "moment";
 
@@ -44,23 +45,47 @@ import {
 } from "../../redux/ActionApi";
 
 const { TextArea } = Input;
+const desc = ["terrible", "bad", "normal", "good", "wonderful"];
 
-const Editor = ({ onChange, onSubmit, submitting, value }) => (
-  <>
-    <Form.Item>
+const Editor = ({
+  onChange,
+  onSubmit,
+  submitting,
+  value,
+  rateValue,
+  onRateChange,
+  hasRated,
+}) => (
+  <Form onFinish={onSubmit}>
+    {!hasRated && (
+      <Form.Item>
+        <span>Rate :</span>
+        <Rate
+          defaultValue={rateValue}
+          tooltips={desc}
+          character={<SmileOutlined />}
+          onChange={onRateChange}
+        />
+      </Form.Item>
+    )}
+
+    <Form.Item
+      name="comment"
+      rules={[
+        {
+          required: true,
+          message: "Please input Comment.",
+        },
+      ]}
+    >
       <TextArea rows={4} onChange={onChange} value={value} />
     </Form.Item>
     <Form.Item>
-      <Button
-        htmlType="submit"
-        loading={submitting}
-        onClick={onSubmit}
-        type="primary"
-      >
+      <Button htmlType="submit" loading={submitting} type="primary">
         Add Comment
       </Button>
     </Form.Item>
-  </>
+  </Form>
 );
 
 const action = "liked";
@@ -72,11 +97,14 @@ const Book = (props) => {
 
   const dispatch = useDispatch();
 
-  const [comment, setComment] = useState("");
+  const [comment, setComment] = useState(null);
+  const [rate, setRate] = useState(5);
+
   var hasLiked = false,
     hasDisliked = false,
     hasFavourite = false,
-    hasReadLater = false;
+    hasReadLater = false,
+    hasRated = false;
 
   useEffect(() => {
     dispatch(fetchBook(props.match.params.bookId));
@@ -111,10 +139,18 @@ const Book = (props) => {
     index !== -1 && (hasReadLater = true);
   }
 
+  if (book.ratings && book.ratings.length > 0) {
+    const index = book.ratings.findIndex((value) => {
+      return value.user === authUser._id;
+    });
+    index !== -1 && (hasRated = true);
+  }
+
   const onhandleComment = () => {
     const commentData = {
       bookId: book._id,
       comment: comment,
+      ratings: rate,
     };
 
     dispatch(addComment(commentData, authUser._id, authUser.token));
@@ -154,6 +190,10 @@ const Book = (props) => {
         authUser.token
       )
     );
+  };
+
+  const handleRateChange = (value) => {
+    setRate(value);
   };
 
   return (
@@ -222,9 +262,10 @@ const Book = (props) => {
         {book.description}
       </Card>
       {book.comments &&
-        book.comments.map((comment) => {
+        book.comments.map((comment, index) => {
           return (
             <Comment
+              key={index}
               author={
                 <Link>
                   {comment.postedBy.username === authUser.username && "you"}
@@ -238,9 +279,20 @@ const Book = (props) => {
               }
               content={<p>{comment.text}</p>}
               datetime={
-                <Tooltip title={moment().format("YYYY-MM-DD HH:mm:ss")}>
-                  <span>{moment(comment.created).fromNow()}</span>
-                </Tooltip>
+                <>
+                  <Tooltip title={moment().format("YYYY-MM-DD HH:mm:ss")}>
+                    <span>{moment(comment.created).fromNow()}</span>
+                  </Tooltip>
+                  <Rate
+                    disabled
+                    character={<SmileOutlined />}
+                    defaultValue={
+                      book.ratings &&
+                      book.ratings[index] &&
+                      book.ratings[index].rate
+                    }
+                  />
+                </>
               }
             />
           );
@@ -257,8 +309,11 @@ const Book = (props) => {
           <Editor
             submitting=""
             value={comment}
+            rateValue={rate}
             onSubmit={onhandleComment}
             onChange={onHandleInputComment}
+            onRateChange={handleRateChange}
+            hasRated={hasRated}
           />
         }
       />

@@ -77,6 +77,18 @@ const bookSchema = new Schema({
     type: Array,
     ref: "User",
   },
+  ratings: [
+    {
+      user: {
+        type: ObjectId,
+        ref: "User",
+      },
+      rate: {
+        type: Number,
+        default: 0,
+      },
+    },
+  ],
 });
 
 module.exports = mongoose.model("Books", bookSchema);

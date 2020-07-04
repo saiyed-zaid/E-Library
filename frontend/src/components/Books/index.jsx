@@ -136,8 +136,8 @@ const MyBooks = (props) => {
                       <Popconfirm
                         title={
                           book.status
-                            ? "Are you sure to private this book?"
-                            : "Are you sure to public this book"
+                            ? "Wanna private this book?"
+                            : "Wanna public this book"
                         }
                         okText="Yes"
                         cancelText="No"

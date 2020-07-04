@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
-import { Alert, Form, Input, Button, Checkbox } from "antd";
+import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -30,16 +30,6 @@ const Signin = (props) => {
   return (
     <>
       <h1>Signin</h1>
-      {props.error && (
-        <Alert
-          message="Oops!"
-          description={props.error}
-          type="warning"
-          showIcon
-          closable
-          style={{ width: "26rem", margin: "5px 0" }}
-        />
-      )}
 
       <Form
         name="normal_login"
@@ -61,16 +51,15 @@ const Signin = (props) => {
           name="password"
           rules={[{ required: true, message: "Please input your Password!" }]}
         >
-          <Input
+          <Input.Password
             prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
             placeholder="Password"
           />
         </Form.Item>
         <Form.Item>
-          <Form.Item name="remember" valuePropName="checked" noStyle>
+          {/* <Form.Item name="remember" valuePropName="checked" noStyle>
             <Checkbox>Remember me</Checkbox>
-          </Form.Item>
+          </Form.Item> */}
 
           <Link className="login-form-forgot" to="/forget-password">
             Forgot password
