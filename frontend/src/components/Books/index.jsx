@@ -2,7 +2,16 @@ import React, { useEffect, useState } from "react";
 
 import { Document, Page } from "react-pdf";
 
-import { Row, Col, Card, PageHeader, Button, Popconfirm, Skeleton } from "antd";
+import {
+  Row,
+  Col,
+  Card,
+  PageHeader,
+  Button,
+  Popconfirm,
+  Skeleton,
+  Empty,
+} from "antd";
 import {
   EyeOutlined,
   EditOutlined,
@@ -90,7 +99,18 @@ const MyBooks = (props) => {
           </Col>
         )} */}
           {globalState.loading && <Skeleton active />}
-          
+
+          {books && books.length <= 0 && (
+            <Empty
+              style={{ margin: "auto" }}
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              imageStyle={{
+                height: 100,
+              }}
+              description={<span>You haven't added any book yet...</span>}
+            ></Empty>
+          )}
+
           {!globalState.loading &&
             books &&
             books.length > 0 &&

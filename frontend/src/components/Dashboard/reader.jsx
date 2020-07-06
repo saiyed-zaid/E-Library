@@ -31,7 +31,6 @@ import {
 import { SETBOOKTOREAD } from "../../redux/actions/BookActions";
 
 import { useSelector, useDispatch } from "react-redux";
-import { ExceptionMap } from "antd/lib/result";
 
 const Dashboard = (props) => {
   const { Content } = Layout;
@@ -112,6 +111,7 @@ const Dashboard = (props) => {
 
         {currentReading && currentReading.length <= 0 && (
           <Empty
+            style={{ margin: "auto" }}
             image={Empty.PRESENTED_IMAGE_SIMPLE}
             imageStyle={{
               height: 100,

@@ -270,6 +270,7 @@ export const insertData = (data, token, _id) => {
         }
       );
       dispatch(INSERT());
+      message.success("Book Added Successfully.")
       return true;
     } catch (error) {
       message.error(error.response.data.error);

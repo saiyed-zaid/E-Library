@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Row, Col, Card, Layout, Statistic, Skeleton } from "antd";
+import { Row, Col, Card, Layout, Statistic, Skeleton, Empty } from "antd";
 import { LikeTwoTone, DislikeTwoTone, BookTwoTone } from "@ant-design/icons";
 import { withRouter } from "react-router-dom";
 
@@ -49,6 +49,18 @@ const Dashboard = (props) => {
         <h1>Top 3 Liked Books</h1>
         <Row gutter={[16, 16]}>
           {globalState.loading && <Skeleton active />}
+
+          {mostLikedBooks && mostLikedBooks.length <= 0 && (
+            <Empty
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              imageStyle={{
+                height: 100,
+              }}
+              description={
+                <span>Currently your books are haven't read by anyone...</span>
+              }
+            ></Empty>
+          )}
 
           {!globalState.loading &&
             mostLikedBooks &&
@@ -106,6 +118,18 @@ const Dashboard = (props) => {
         <h1>Top 3 Reading Books</h1>
         <Row gutter={[16, 16]}>
           {globalState.loading && <Skeleton active />}
+
+          {mostReadBooks && mostReadBooks.length <= 0 && (
+            <Empty
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              imageStyle={{
+                height: 100,
+              }}
+              description={
+                <span>Currently your books are haven't read by anyone...</span>
+              }
+            ></Empty>
+          )}
 
           {!globalState.loading &&
             mostReadBooks &&

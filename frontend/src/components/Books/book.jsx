@@ -103,7 +103,7 @@ const Book = (props) => {
   useEffect(() => {
     dispatch(fetchBook(props.match.params.bookId));
     dispatch(fetchAuthUser(authUser._id, authUser.token));
-  });
+  },[]);
 
   if (book.likes && book.likes.length > 0) {
     const index = book.likes.findIndex((value) => {
