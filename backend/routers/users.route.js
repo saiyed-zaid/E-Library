@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const authCheck = require("../middlewares/authCheck");
+const monthlyReadingChecker = require("../helper/monthlyReadingCheck");
 
 const User = require("../models/Users");
 const Books = require("../models/Books");
@@ -12,6 +13,7 @@ router.patch("/api/user/book/read", authCheck, async (req, res, next) => {
     const book = await Books.findById(req.body.bookId);
 
     if (!user.plan) {
+      //If plan not selected by user
       return res.json({
         error: "Please select plan.",
         canRead: false,
@@ -23,12 +25,29 @@ router.patch("/api/user/book/read", authCheck, async (req, res, next) => {
       const index = user.currentReading.findIndex((value) => {
         return value.book.toString() === req.body.bookId;
       });
+
+      //If Selected book is already in currentReading Then
+
       if (index !== -1) {
-        res.status(200).json({ canRead: true });
+        return res.status(200).json({ canRead: true });
       }
     }
 
     if (user.plan === "basic" && user.currentReading) {
+      //Total book read according to plan
+
+      const hasLimitExcede = monthlyReadingChecker(user, 1);
+
+      if (hasLimitExcede) {
+        return res.json({
+          error:
+            "You have excede the limit for reading book for this month, Please upgrade your plan to read more books.",
+          currentPlan: "basic",
+          canRead: false,
+          planError: false,
+        });
+      }
+
       if (user.currentReading.length >= 1) {
         return res.json({
           error: "Please upgrade your plan to read more books.",
@@ -40,6 +59,18 @@ router.patch("/api/user/book/read", authCheck, async (req, res, next) => {
     }
 
     if (user.plan === "standard" && user.currentReading) {
+      const hasLimitExcede = monthlyReadingChecker(user, 5);
+
+      if (hasLimitExcede) {
+        return res.json({
+          error:
+            "You have excede the limit for reading book for this month, Please upgrade your plan to read more books.",
+          currentPlan: "standard",
+          canRead: false,
+          planError: false,
+        });
+      }
+
       if (user.currentReading.length >= 3) {
         return res.json({
           error: "Please upgrade your plan to read more books.",
@@ -51,6 +82,18 @@ router.patch("/api/user/book/read", authCheck, async (req, res, next) => {
     }
 
     if (user.plan === "prime" && user.currentReading) {
+      const hasLimitExcede = monthlyReadingChecker(user, 15);
+
+      if (hasLimitExcede) {
+        return res.json({
+          error:
+            "You have excede the limit for reading book for this month, Please upgrade your plan to read more books.",
+          currentPlan: "standard",
+          canRead: false,
+          planError: false,
+        });
+      }
+
       if (user.currentReading.length >= 7) {
         return res.json({
           error: "Current book reading limits excede.",
@@ -69,6 +112,7 @@ router.patch("/api/user/book/read", authCheck, async (req, res, next) => {
       added: Date.now(),
     });
 
+    //Add user _id to Book model for numbe of read
     if (book.numberOfRead.indexOf(req.auth._id) === -1) {
       book.numberOfRead.push({
         _id: req.auth._id,

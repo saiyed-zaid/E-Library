@@ -1,10 +1,15 @@
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
-import { Form, Input, Button, Checkbox } from "antd";
+
+import { Form, Input, Button } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+
+import { GoogleLogin } from "react-google-login";
+
 import { useDispatch, useSelector } from "react-redux";
 
-import { signin } from "../../redux/ActionApi";
+import { signin, socialLogin } from "../../redux/ActionApi";
+import { CLIENT_ID } from "../../redux/const";
 
 const Signin = (props) => {
   const dispatch = useDispatch();
@@ -15,6 +20,20 @@ const Signin = (props) => {
     try {
       const response = await dispatch(signin(values));
       response && props.history.push("/");
+    } catch (error) {}
+  };
+
+  const responseGoogle = async (response) => {
+    console.log("Google", response);
+    try {
+      if (response.googleId) {
+        /* dispatch(Login(response.profileObj));
+        props.history.push("/app/"); */
+
+        const res = await dispatch(socialLogin(response.profileObj));
+
+        res && props.history.push("/");
+      }
     } catch (error) {}
   };
 
@@ -64,6 +83,16 @@ const Signin = (props) => {
           <Link className="login-form-forgot" to="/forget-password">
             Forgot password
           </Link>
+        </Form.Item>
+
+        <Form.Item>
+          <GoogleLogin
+            clientId={CLIENT_ID}
+            buttonText="Login With Goodle"
+            onSuccess={responseGoogle}
+            onFailure={responseGoogle}
+            cookiePolicy={"single_host_origin"}
+          />
         </Form.Item>
 
         <Form.Item>

@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   BrowserRouter as Router,
   Route,
   Switch,
   withRouter,
 } from "react-router-dom";
-import { Layout, Menu, Avatar, Dropdown } from "antd";
+import { Layout } from "antd";
 
 import Navbar from "./components/Header";
 import Signup from "./components/Singup";
@@ -25,13 +25,11 @@ import Plans from "./components/Plans";
 import ViewBook from "./components/Books/view";
 
 import store from "./redux/store";
-import { Provider, useDispatch, useSelector } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 
 const { Content } = Layout;
 
 const AppRouter = (props) => {
-  const dispatch = useDispatch();
-
   const authUser = useSelector((state) => state.authUser.authUser);
 
   const isLoggedIn = window.localStorage.getItem("authUser") ? true : false;
@@ -77,7 +75,11 @@ const AppRouter = (props) => {
                   component={ForgetPassword}
                 />
 
-                <Route exact path="/reset-password/:token" component={ResetPassword} />
+                <Route
+                  exact
+                  path="/reset-password/:token"
+                  component={ResetPassword}
+                />
 
                 {/* <Route exact path="/mybooks" component={MyBooks} /> */}
 

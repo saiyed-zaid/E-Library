@@ -70,10 +70,14 @@ router.post(
   ],
   async (req, res, next) => {
     let verificationCode;
+
     try {
       const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+
+      if (!req.body.googleId) {
+        if (!errors.isEmpty()) {
+          return res.status(422).json({ errors: errors.array() });
+        }
       }
 
       const userExists = await User.findOne({
@@ -93,9 +97,13 @@ router.post(
       verificationCode = md5(new Date().getTime()).substr(0, 6);
       req.body.verificationCode = verificationCode;
 
-      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      if (!req.body.googleId) {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-      req.body.password = hashedPassword;
+        req.body.password = hashedPassword;
+      } else {
+        req.body.password = req.body.googleId;
+      }
 
       mailer({
         from: "zss@narola.email",
@@ -213,9 +221,53 @@ router.post(
   }
 );
 
-router.patch("/api/user/verification/:userId", async (req, res, next) => {
+router.post("/api/social-login", async (req, res, next) => {
   try {
-    const user = await User.findById(new ObjectId(req.params.userId));
+    let user = await User.findOne({ email: req.body.email });
+
+    if (!user) {
+      return res.status(404).json({ error: "Please Signup First" });
+    }
+
+    user = _.extend(user, req.body);
+    user.updated = Date.now();
+    user.save();
+
+    let token;
+    token = jwt.sign(
+      {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        photo: user.photo,
+        token: token,
+      },
+      process.env.JWT_KEY,
+      {
+        expiresIn: "1h",
+      }
+    );
+    // return response with user and token to frontend client
+
+    return res.json({
+      isLoggedIn: true,
+      token: token,
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      photo: user.photo,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ error: "Something went wrong..." });
+  }
+});
+
+router.patch("/api/user/verification", async (req, res, next) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
 
     if (!user) {
       return res

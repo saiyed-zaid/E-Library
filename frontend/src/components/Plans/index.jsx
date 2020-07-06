@@ -82,7 +82,6 @@ const Plans = (props) => {
                 </Col>
                 <Col span={24}>
                   <CheckOutlined />
-                  {"  "}
                   <Text type="secondary">3 Book/Time</Text>
                 </Col>
               </Row>
@@ -96,7 +95,6 @@ const Plans = (props) => {
               actions={[
                 <Button
                   type="primary"
-                  onClick={() => 1}
                   onClick={() => handlePlanSelection("prime")}
                   style={{ display: "block" }}
                 >

@@ -68,7 +68,7 @@ const Edit = (props) => {
         console.log(info.file, info.fileList);
       }
       if (status === "done" && response.isUploaded) {
-        setPhoto(response.public_uri);
+        setReference(response.public_uri);
 
         message.success(`${info.file.name} file uploaded successfully.`);
       } else if (status === "error") {

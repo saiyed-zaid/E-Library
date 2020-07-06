@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { withRouter, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -10,9 +10,9 @@ import {
   LockOutlined,
 } from "@ant-design/icons";
 
-import { GET, Logout } from "../../redux/actions/userActions";
+import { Logout } from "../../redux/actions/userActions";
 
-const { Header, Content } = Layout;
+const { Header } = Layout;
 
 const Navbar = (props) => {
   const dispatch = useDispatch();

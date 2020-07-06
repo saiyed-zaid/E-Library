@@ -6,11 +6,16 @@ import {
   InfoCircleOutlined,
   CheckCircleOutlined,
 } from "@ant-design/icons";
+
 import Axios from "axios";
+
+import { GoogleLogin } from "react-google-login";
 
 import { connect } from "react-redux";
 
 import { signup, verifyAccount } from "../../redux/ActionApi";
+
+import { CLIENT_ID } from "../../redux/const";
 
 const { Step } = Steps;
 const { Option } = Select;
@@ -51,6 +56,7 @@ class Signup extends React.Component {
       hasError: false,
       resultStatus: "info",
       userData: {},
+      googleData: {},
     };
 
     this.steps = [
@@ -170,9 +176,15 @@ class Signup extends React.Component {
         }
       }
 
-      this.state.registrationFields.forEach((field) => {
-        this.userData[field.name[0]] = field.value;
-      });
+      if (!this.state.googleData.googleId) {
+        this.state.registrationFields.forEach((field) => {
+          this.userData[field.name[0]] = field.value;
+        });
+      } else {
+        this.userData.username = this.state.googleData.givenName;
+        this.userData.email = this.state.googleData.email;
+        this.userData.googleId = this.state.googleData.googleId;
+      }
 
       this.state.roleFields.forEach((field) => {
         this.userData[field.name[0]] = field.value;
@@ -184,6 +196,7 @@ class Signup extends React.Component {
 
       console.log("userdata", this.userData);
       this.props.signupDispatch(this.userData);
+
       this.setState({
         userData: this.userData,
       });
@@ -210,10 +223,36 @@ class Signup extends React.Component {
 
     this.state.verificationFields.forEach((field) => {
       data[field.name[0]] = field.value;
-      data._id = this.props.data.user._id;
+      data.email = this.userData.email;
     });
 
     this.props.verificationDispatch(data);
+  };
+
+  responseGoogle = async (response) => {
+    console.log("Google", response);
+    try {
+      if (response.googleId) {
+        /* dispatch(Login(response.profileObj));
+        props.history.push("/app/"); */
+
+        //this.props.signupDispatch(response.profileObj);
+
+        this.setState({
+          googleData: response.profileObj,
+        });
+
+        const currentStep = this.state.current + 1;
+
+        this.setState({
+          current: currentStep,
+        });
+
+        /* const res = await dispatch(socialLogin(response.profileObj));
+
+        res && props.history.push("/"); */
+      }
+    } catch (error) {}
   };
 
   render() {
@@ -302,6 +341,16 @@ class Signup extends React.Component {
                 ]}
               >
                 <Input.Password />
+              </Form.Item>
+
+              <Form.Item>
+                <GoogleLogin
+                  clientId={CLIENT_ID}
+                  buttonText="Signup With Goodle"
+                  onSuccess={this.responseGoogle}
+                  onFailure={this.responseGoogle}
+                  cookiePolicy={"single_host_origin"}
+                />
               </Form.Item>
 
               <ActionButtons

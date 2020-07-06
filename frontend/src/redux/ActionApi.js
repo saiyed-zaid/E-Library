@@ -39,7 +39,7 @@ export const verifyAccount = (postData) => {
       dispatch(LOADING());
 
       const response = await Axios.patch(
-        `${process.env.REACT_APP_BACKEND_URI}/user/verification/${postData._id}`,
+        `${process.env.REACT_APP_BACKEND_URI}/user/verification`,
         postData
       );
 
@@ -56,6 +56,28 @@ export const signin = (postData) => {
       const response = await Axios.post(
         `${process.env.REACT_APP_BACKEND_URI}/signin`,
         postData
+      );
+
+      dispatch(login(response.data));
+      dispatch(SUCCESSS());
+      return true;
+    } catch (error) {
+      if (error.response) {
+        message.error(error.response.data.error);
+        dispatch(SUCCESSS());
+      }
+    }
+  };
+};
+
+export const socialLogin = (data) => {
+  return async (dispatch) => {
+    try {
+      dispatch(LOADING());
+
+      const response = await Axios.post(
+        `${process.env.REACT_APP_BACKEND_URI}/social-login`,
+        data
       );
 
       dispatch(login(response.data));

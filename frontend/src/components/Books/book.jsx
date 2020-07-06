@@ -5,11 +5,9 @@ import { Link } from "react-router-dom";
 import {
   Rate,
   Avatar,
-  Space,
   Comment,
   Tooltip,
   Card,
-  Popconfirm,
   Form,
   Button,
   Input,
@@ -17,13 +15,9 @@ import {
 } from "antd";
 import {
   LikeOutlined,
-  StarOutlined,
-  MessageOutlined,
   LikeFilled,
   DislikeFilled,
   DislikeOutlined,
-  EditOutlined,
-  DeleteOutlined,
   HeartOutlined,
   ReadOutlined,
   ReadFilled,
@@ -109,7 +103,7 @@ const Book = (props) => {
   useEffect(() => {
     dispatch(fetchBook(props.match.params.bookId));
     dispatch(fetchAuthUser(authUser._id, authUser.token));
-  }, []);
+  });
 
   if (book.likes && book.likes.length > 0) {
     const index = book.likes.findIndex((value) => {

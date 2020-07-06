@@ -77,6 +77,18 @@ const userSchema = new Schema({
       },
     },
   ],
+  hasRead: [
+    {
+      numberOfRead: {
+        type: Number,
+        default: 0,
+      },
+      added: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
   resetPasswordToken: {
     type: String,
     default: "",

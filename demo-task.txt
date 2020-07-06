@@ -11,9 +11,9 @@ Entry Will be inserted by this step :
 	like : book category, book name, pages, reference, upload, isOnTrueEvent and so on...
       - Step 5: (for reader) choose plans
 	like: basic(free) , standard($5/month), prime($10/month)
-	1. basic: reader can read/access only one book per month, and can't read book multiple book at the same time
-	2. standard: reader can read/access till 5 book/month, and can read 3 book at the same time
-	3. prime: reader can read/access till 15book/month, and can read 7 book @ same time
+	1. basic: reader can read/access only one book per month, and can't read book multiple book at the same time [DONE]
+	2. standard: reader can read/access till 5 book/month, and can read 3 book at the same time [DONE]
+	3. prime: reader can read/access till 15book/month, and can read 7 book @ same time [DONE]
 
 - Login
       - Login with username / email and password ( or login with Google or Facebook)
