@@ -16,6 +16,7 @@ import { connect } from "react-redux";
 import { signup, verifyAccount } from "../../redux/ActionApi";
 
 import { CLIENT_ID } from "../../redux/const";
+import { withRouter } from "react-router-dom";
 
 const { Step } = Steps;
 const { Option } = Select;
@@ -57,6 +58,7 @@ class Signup extends React.Component {
       resultStatus: "info",
       userData: {},
       googleData: {},
+      hasUsername: false,
     };
 
     this.steps = [
@@ -122,7 +124,7 @@ class Signup extends React.Component {
     });
   };
 
-  next = () => {
+  next = async () => {
     var currentStep;
     let hasError = false;
 
@@ -167,13 +169,6 @@ class Signup extends React.Component {
             hasError = true;
           }
         });
-
-        if (!hasError) {
-          currentStep = this.state.current + 1;
-          this.setState({
-            current: currentStep,
-          });
-        }
       }
 
       if (!this.state.googleData.googleId) {
@@ -194,12 +189,18 @@ class Signup extends React.Component {
         this.userData[field.name[0]] = field.value;
       });
 
-      console.log("userdata", this.userData);
-      this.props.signupDispatch(this.userData);
+      if (!hasError) {
+        const response = await this.props.signupDispatch(this.userData);
 
-      this.setState({
-        userData: this.userData,
-      });
+        response && (currentStep = this.state.current + 1);
+
+        response &&
+          this.setState({
+            current: currentStep,
+            userData: this.userData,
+          });
+      }
+
       //Call
     }
   };
@@ -230,14 +231,8 @@ class Signup extends React.Component {
   };
 
   responseGoogle = async (response) => {
-    console.log("Google", response);
     try {
       if (response.googleId) {
-        /* dispatch(Login(response.profileObj));
-        props.history.push("/app/"); */
-
-        //this.props.signupDispatch(response.profileObj);
-
         this.setState({
           googleData: response.profileObj,
         });
@@ -247,12 +242,18 @@ class Signup extends React.Component {
         this.setState({
           current: currentStep,
         });
-
-        /* const res = await dispatch(socialLogin(response.profileObj));
-
-        res && props.history.push("/"); */
       }
     } catch (error) {}
+  };
+
+  handleCheckUsernameExists = async (e) => {
+    const response = await Axios.get(
+      `${process.env.REACT_APP_BACKEND_URI}/find-user-name/${e.target.value}`
+    );
+    this.setState({
+      hasUsername: response.data.hasUsername,
+    });
+    console.log("UU", response.data.hasUsername);
   };
 
   render() {
@@ -285,8 +286,10 @@ class Signup extends React.Component {
                     message: "Please input your username!",
                   },
                 ]}
+                validateStatus={this.state.hasUsername && "error"}
+                help={this.state.hasUsername && "Username exists."}
               >
-                <Input />
+                <Input onChange={this.handleCheckUsernameExists} />
               </Form.Item>
 
               <Form.Item
@@ -434,15 +437,24 @@ class Signup extends React.Component {
                 <Input />
               </Form.Item>
 
-              <Form.Item
-                name="intrest"
-                label="Intrest"
-                rules={[{ required: true }]}
-              >
-                <Select placeholder="Select your books of interest" allowClear>
+              <Form.Item name="interest" label="Interest">
+                {/*  <Select placeholder="Select your books of interest" allowClear>
                   {this.state.bookCategories.map((category) => {
                     return (
                       <Option value={category._id}>{category.name}</Option>
+                    );
+                  })}
+                </Select> */}
+                <Select
+                  mode="multiple"
+                  placeholder="Please select interested book categories."
+                >
+                  {this.state.bookCategories.map((category, index) => {
+                    console.log(category._id);
+                    return (
+                      <Option value={category._id} key={index}>
+                        {category.name}
+                      </Option>
                     );
                   })}
                 </Select>
@@ -542,4 +554,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Signup);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Signup));

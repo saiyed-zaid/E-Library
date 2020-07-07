@@ -164,7 +164,7 @@ const Dashboard = (props) => {
                       <Col span={8}>
                         <Statistic
                           title="Like"
-                          value={book._id.likes.length}
+                          value={book._id.likes && book._id.likes.length}
                           prefix={<LikeTwoTone />}
                         />
                       </Col>
@@ -172,7 +172,7 @@ const Dashboard = (props) => {
                       <Col span={8}>
                         <Statistic
                           title="Dislike"
-                          value={book._id.dislikes.length}
+                          value={book._id.dislikes && book._id.dislikes.length}
                           prefix={<DislikeTwoTone />}
                         />
                       </Col>

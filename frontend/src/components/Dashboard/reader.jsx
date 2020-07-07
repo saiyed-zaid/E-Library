@@ -13,14 +13,7 @@ import {
   message,
   Skeleton,
 } from "antd";
-import {
-  LikeTwoTone,
-  DislikeTwoTone,
-  BookTwoTone,
-  LikeOutlined,
-  CloseCircleOutlined,
-  InfoCircleOutlined,
-} from "@ant-design/icons";
+import { CloseCircleOutlined, InfoCircleOutlined } from "@ant-design/icons";
 
 import {
   fetchAuthUser,
@@ -55,6 +48,8 @@ const Dashboard = (props) => {
       props.history.push("/plans");
     }
   }
+
+  const bookSuggetions = useSelector((state) => state.authUser.user.interest);
 
   const favouriteBooks = useSelector(
     (state) => state.authUser.user.favouriteBook
@@ -106,7 +101,77 @@ const Dashboard = (props) => {
   return (
     <>
       <div className="site-card-wrapper">
-        <h1>Contiue Reading...</h1>
+        <h1>RECOMMENDED FOR YOU</h1>
+        {globalState.loading && <Skeleton active />}
+
+        {bookSuggetions && bookSuggetions.length <= 0 && (
+          <Empty
+            style={{ margin: "auto" }}
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            imageStyle={{
+              height: 100,
+            }}
+            description={<span>Search book here...</span>}
+          >
+            <Button type="dashed" onClick={() => props.history.push("/search")}>
+              Find Books
+            </Button>
+          </Empty>
+        )}
+        <Row gutter={[16, 16]}>
+          {!globalState.loading &&
+            bookSuggetions &&
+            bookSuggetions.length > 0 &&
+            bookSuggetions.map((book, index) => {
+              return (
+                index <= 2 && (
+                  <Col xs={24} md={8}>
+                    <Card
+                      bordered={true}
+                      title={book.title}
+                      cover={
+                        <Popconfirm
+                          title="Do you want to read?"
+                          onConfirm={() =>
+                            handleBookRead(book._id, book.reference)
+                          }
+                          onCancel={() => 1}
+                          okText="Yes"
+                          cancelText="No"
+                        >
+                          <img
+                            alt="example"
+                            src={book.photo}
+                            onError={(e) =>
+                              (e.target.src =
+                                "https://images.unsplash.com/photo-1592859372969-7ce244fb6582?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80")
+                            }
+                            style={{ height: "200px", objectFit: "contain" }}
+                          />
+                        </Popconfirm>
+                      }
+                    >
+                      <Row gutter={24}>
+                        <Col span={18}>
+                          <p>{book.description}</p>
+                        </Col>
+                        <Col span={4}>
+                          <InfoCircleOutlined
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleBookView(book._id)}
+                          />
+                        </Col>
+                      </Row>
+                    </Card>
+                  </Col>
+                )
+              );
+            })}
+        </Row>
+      </div>
+
+      <div className="site-card-wrapper">
+        <h1>CONTINUE READING</h1>
         {globalState.loading && <Skeleton active />}
 
         {currentReading && currentReading.length <= 0 && (
@@ -191,7 +256,7 @@ const Dashboard = (props) => {
       </div>
 
       <div className="site-card-wrapper">
-        <h1>Favourite Books</h1>
+        <h1>FAVORITE BOOKS</h1>
         {globalState.loading && <Skeleton active />}
 
         {favouriteBooks && favouriteBooks.length <= 0 && (
@@ -274,7 +339,7 @@ const Dashboard = (props) => {
       </div>
 
       <div className="site-card-wrapper">
-        <h1>Later Read Book List</h1>
+        <h1>FROM READ LATER BOOK LIST</h1>
         {globalState.loading && <Skeleton active />}
 
         {ReadlaterBooks && ReadlaterBooks.length <= 0 && (

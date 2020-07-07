@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, withRouter } from "react-router-dom";
+import { NavLink, withRouter } from "react-router-dom";
 
 import { Form, Input, Button } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
@@ -18,13 +18,12 @@ const Signin = (props) => {
 
   const onHandleSubmit = async (values) => {
     try {
-      const response = await dispatch(signin(values));
+      const response = await dispatch(signin(values, props.history));
       response && props.history.push("/");
     } catch (error) {}
   };
 
   const responseGoogle = async (response) => {
-    console.log("Google", response);
     try {
       if (response.googleId) {
         /* dispatch(Login(response.profileObj));
@@ -80,9 +79,9 @@ const Signin = (props) => {
             <Checkbox>Remember me</Checkbox>
           </Form.Item> */}
 
-          <Link className="login-form-forgot" to="/forget-password">
+          <NavLink className="login-form-forgot" to="/forget-password">
             Forgot password
-          </Link>
+          </NavLink>
         </Form.Item>
 
         <Form.Item>
@@ -104,7 +103,7 @@ const Signin = (props) => {
           >
             Log in
           </Button>
-          Or <Link to="/signup">register now!</Link>
+          Or <NavLink to="/signup">register now!</NavLink>
         </Form.Item>
       </Form>
     </>

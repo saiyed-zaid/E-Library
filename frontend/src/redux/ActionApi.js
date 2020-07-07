@@ -1,5 +1,5 @@
 import React from "react";
-import { message, notification } from "antd";
+import { message, notification, Button } from "antd";
 
 import { SmileOutlined } from "@ant-design/icons";
 
@@ -29,7 +29,11 @@ export const signup = (postData) => {
       );
 
       dispatch(SUCCESSS());
-    } catch (error) {}
+      return true;
+    } catch (error) {
+      message.error(error.response.data.error);
+      return false;
+    }
   };
 };
 
@@ -43,12 +47,39 @@ export const verifyAccount = (postData) => {
         postData
       );
 
-      dispatch(SUCCESSS());
-    } catch (error) {}
+      if (response.status === 422 && !response.data.isVerified) {
+        message.error(response.data.error);
+      } else {
+        message.success(response.data.message);
+
+        dispatch(SUCCESSS());
+      }
+    } catch (error) {
+      message.error(error.response.data.error);
+    }
   };
 };
 
-export const signin = (postData) => {
+export const sendVerification = (data) => {
+  return async (dispatch) => {
+    try {
+      dispatch(LOADING());
+
+      const response = await Axios.patch(
+        `${process.env.REACT_APP_BACKEND_URI}/send/verification-code`,
+        data
+      );
+
+      message.success(response.data.message);
+
+      dispatch(SUCCESSS());
+    } catch (error) {
+      message.error(error.response.data.error);
+    }
+  };
+};
+
+export const signin = (postData, history) => {
   return async (dispatch) => {
     try {
       dispatch(LOADING());
@@ -62,10 +93,26 @@ export const signin = (postData) => {
       dispatch(SUCCESSS());
       return true;
     } catch (error) {
-      if (error.response) {
+      if (error.response.data.isNotVerified) {
+        notification["error"]({
+          message: error.response.data.error,
+          description: "Please click below button to verify your account.",
+          duration: 0,
+          btn: (
+            <Button
+              type="primary"
+              size="small"
+              onClick={() => history.push("/account/verification")}
+            >
+              Verify Account
+            </Button>
+          ),
+        });
+      } else {
         message.error(error.response.data.error);
-        dispatch(SUCCESSS());
       }
+
+      dispatch(SUCCESSS());
     }
   };
 };
@@ -270,7 +317,7 @@ export const insertData = (data, token, _id) => {
         }
       );
       dispatch(INSERT());
-      message.success("Book Added Successfully.")
+      message.success("Book Added Successfully.");
       return true;
     } catch (error) {
       message.error(error.response.data.error);

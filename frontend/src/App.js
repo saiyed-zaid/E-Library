@@ -23,6 +23,7 @@ import ErrorPage from "./components/ErrorPages/404";
 import PrivateRoute from "./components/Helper/PrivateRoute";
 import Plans from "./components/Plans";
 import ViewBook from "./components/Books/view";
+import AccountVerication from "./components/AccountVerication";
 
 import store from "./redux/store";
 import { Provider, useSelector } from "react-redux";
@@ -117,6 +118,12 @@ const AppRouter = (props) => {
                 <Route exact path="/search" component={Search} />
 
                 <Route exact path="/plans" component={Plans} />
+
+                <Route
+                  exact
+                  path="/account/verification"
+                  component={AccountVerication}
+                />
 
                 <Route path="*" component={ErrorPage} />
               </Switch>

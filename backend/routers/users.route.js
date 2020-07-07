@@ -41,7 +41,7 @@ router.patch("/api/user/book/read", authCheck, async (req, res, next) => {
       if (hasLimitExcede) {
         return res.json({
           error:
-            "You have excede the limit for reading book for this month, Please upgrade your plan to read more books.",
+            "You have exceede the limit for reading book for this month, Please upgrade your plan to read more books.",
           currentPlan: "basic",
           canRead: false,
           planError: false,

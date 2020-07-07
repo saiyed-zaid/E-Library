@@ -5,11 +5,15 @@ const authCheck = require("../middlewares/authCheck");
 
 const User = require("../models/Users");
 const Books = require("../models/Books");
+const { ObjectId } = require("mongodb");
 
 router.get("/api/report/most-liked-book", authCheck, async (req, res, next) => {
   try {
     var books = await Books.aggregate([
+      { $match: { author: ObjectId(req.auth._id) } },
+
       { $unwind: "$likes" },
+      
       {
         $group: {
           _id: {
@@ -24,7 +28,7 @@ router.get("/api/report/most-liked-book", authCheck, async (req, res, next) => {
         },
       },
     ]).sort({ count: -1 });
-
+    
     return res.json({ mostLikedBooks: books });
   } catch (error) {
     console.log(error);
@@ -35,7 +39,10 @@ router.get("/api/report/most-liked-book", authCheck, async (req, res, next) => {
 router.get("/api/report/most-read-book", authCheck, async (req, res, next) => {
   try {
     var books = await Books.aggregate([
+      { $match: { author: ObjectId(req.auth._id) } },
+      
       { $unwind: "$numberOfRead" },
+
       {
         $group: {
           _id: {

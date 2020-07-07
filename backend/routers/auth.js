@@ -10,29 +10,42 @@ const mailer = require("../helper/mailer");
 const authCheck = require("../middlewares/authCheck");
 
 const User = require("../models/Users");
+const Books = require("../models/Books");
+
 const { ObjectId } = require("mongodb");
 
 //Fetch Login User Data
 
 router.get("/api/user/:userId", authCheck, async (req, res, next) => {
   try {
-    const user = await User.findById(req.auth._id)
+    var user = await User.findById(req.auth._id, { password: 0 })
       .populate("favouriteBook.book")
       .populate("bookToReadLater", "title description reference photo")
       .populate("currentReading.book", "title description reference photo");
 
-    user.password = undefined;
+    //RECOMMENDED BOOKS
+    if (user.interest.length > 0) {
+      var randomSuggetions = await Books.find({
+        category: { $in: user.interest },
+      });
+
+      const shuffled = randomSuggetions.sort(() => 0.5 - Math.random());
+      randomSuggetions = shuffled.slice(0, 3);
+
+      user.interest = randomSuggetions;
+    }
+
     if (user.favouriteBook.length > 0) {
       user.favouriteBook.sort(function (a, b) {
         return new Date(a.added) - new Date(b.added);
       });
     }
+
     if (user.currentReading.length > 0) {
       user.currentReading.sort(function (a, b) {
         return new Date(a.added) - new Date(b.added);
       });
     }
-
     return res.status(200).json(user);
   } catch (error) {
     console.log(error);
@@ -186,8 +199,8 @@ router.post(
 
       if (!userExists.isVerified) {
         return res.status(401).json({
-          error: "Your Account isn't verified.",
-          isVerified: false,
+          error: `Your Account isn't verified.`,
+          isNotVerified: true,
         });
       }
 
@@ -267,12 +280,21 @@ router.post("/api/social-login", async (req, res, next) => {
 
 router.patch("/api/user/verification", async (req, res, next) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({
+      $or: [{ username: req.body.username }, { email: req.body.email }],
+    });
 
     if (!user) {
       return res
-        .status(402)
+        .status(404)
         .json({ error: "User Not Exists", isVerified: false });
+    }
+
+    if (user.isVerified) {
+      return res.status(200).json({
+        message: "Your account is already verified please login.",
+        isVerified: true,
+      });
     }
 
     if (req.body.passcode !== user.verificationCode) {
@@ -284,9 +306,10 @@ router.patch("/api/user/verification", async (req, res, next) => {
       user.isVerified = true;
       user.verificationCode = "";
       user.save();
-      return res
-        .status(200)
-        .json({ message: "Verification Successfull.", isVerified: true });
+      return res.status(200).json({
+        message: "Verification Successfull Please Login.",
+        isVerified: true,
+      });
     }
   } catch (error) {
     res.status(500).json({
@@ -386,5 +409,51 @@ router.patch(
     }
   }
 );
+
+router.get("/api/find-user-name/:userName", async (req, res, next) => {
+  try {
+    const user = await User.findOne({ username: req.params.userName });
+    if (!user) {
+      return res.json({ hasUsername: false });
+    } else {
+      console.log(user);
+      return res.json({ hasUsername: true });
+    }
+  } catch (error) {}
+});
+
+router.patch("/api/send/verification-code", async (req, res, next) => {
+  try {
+    const user = await User.findOne({
+      $or: [{ username: req.body.username }, { email: req.body.username }],
+    });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ error: "User with this username / email does not exists" });
+    }
+
+    const verificationCode = md5(new Date().getTime()).substr(0, 6);
+
+    await user.updateOne({
+      verificationCode,
+    });
+
+    mailer({
+      from: "zss@narola.email",
+      to: "zss@narola.email",
+      subject: "User verification",
+      text: `Your Verification Code ${verificationCode}`,
+      html: `<span> Your Verification Code ${verificationCode} </span>`,
+    });
+
+    return res.status(200).json({
+      message: `Email has been sent to zss@narola.email. Follow the instructions to reset your password.`,
+    });
+  } catch (error) {
+    res.send({ error: "Something went wrong..." });
+  }
+});
 
 module.exports = router;
