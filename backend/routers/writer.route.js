@@ -7,13 +7,19 @@ const User = require("../models/Users");
 const Books = require("../models/Books");
 const { ObjectId } = require("mongodb");
 
+/**
+ * @route    GET /api/report/most-liked-book
+ * @description Fetch writer most likes books
+ * @access PRIVATE
+ */
+
 router.get("/api/report/most-liked-book", authCheck, async (req, res, next) => {
   try {
     var books = await Books.aggregate([
       { $match: { author: ObjectId(req.auth._id) } },
 
       { $unwind: "$likes" },
-      
+
       {
         $group: {
           _id: {
@@ -28,7 +34,7 @@ router.get("/api/report/most-liked-book", authCheck, async (req, res, next) => {
         },
       },
     ]).sort({ count: -1 });
-    
+
     return res.json({ mostLikedBooks: books });
   } catch (error) {
     console.log(error);
@@ -36,11 +42,17 @@ router.get("/api/report/most-liked-book", authCheck, async (req, res, next) => {
   }
 });
 
+/**
+ * @route    GET /api/report/most-read-book
+ * @description Fetch writer most read books
+ * @access PRIVATE
+ */
+
 router.get("/api/report/most-read-book", authCheck, async (req, res, next) => {
   try {
     var books = await Books.aggregate([
       { $match: { author: ObjectId(req.auth._id) } },
-      
+
       { $unwind: "$numberOfRead" },
 
       {

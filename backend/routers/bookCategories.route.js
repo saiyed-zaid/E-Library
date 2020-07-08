@@ -7,6 +7,12 @@ const BookCategory = require("../models/BooksCategories");
 const BooksCategories = require("../models/BooksCategories");
 const { ObjectID } = require("mongodb");
 
+/**
+ * @route    POST /api/book/categories
+ * @description Add category
+ * @access PUBLIC
+ */
+
 router.post("/api/book/categories", async (req, res, next) => {
   try {
     const book = new BookCategory(req.body);
@@ -16,6 +22,12 @@ router.post("/api/book/categories", async (req, res, next) => {
     res.status(500).json({ error: "Something Went Wrong..." });
   }
 });
+
+/**
+ * @route    GET /api/book/categories
+ * @description Fetch all categories
+ * @access PUBLIC
+ */
 
 router.get("/api/book/categories", async (req, res, next) => {
   try {
@@ -27,6 +39,12 @@ router.get("/api/book/categories", async (req, res, next) => {
     res.status(500).json({ error: "Something Went Wrong..." });
   }
 });
+
+/**
+ * @route    PATCH /api/book/categories/:categoryId
+ * @description Update category
+ * @access PUBLIC
+ */
 
 router.patch("/api/book/categories/:categoryId", async (req, res, next) => {
   try {
@@ -44,6 +62,12 @@ router.patch("/api/book/categories/:categoryId", async (req, res, next) => {
   }
 });
 
+/**
+ * @route    DELETE /api/book/categories/:categoryId
+ * @description Delete category
+ * @access PUBLIC
+ */
+
 router.delete("/api/book/categories/:categoryId", async (req, res, next) => {
   try {
     const bookCategories = await BooksCategories.findById(
@@ -57,6 +81,12 @@ router.delete("/api/book/categories/:categoryId", async (req, res, next) => {
     res.status(500).json({ error: "Something Went Wrong..." });
   }
 });
+
+/**
+ * @route    GET /api/book/categories/:categoryId
+ * @description Fetch category by ID
+ * @access PUBLIC
+ */
 
 router.get("/api/book/categories/:categoryId", async (req, res, next) => {
   try {

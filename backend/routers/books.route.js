@@ -11,7 +11,12 @@ const { body, validationResult } = require("express-validator");
 const { ObjectId, ObjectID } = require("mongodb");
 const { extend } = require("lodash");
 
-//return empty array when no books found
+/**
+ * @route    GET /api/books
+ * @description Fetch books
+ * @access PUBLIC
+ */
+
 router.get("/api/books", async (req, res, next) => {
   try {
     const books = await Books.find({ status: true }).populate(
@@ -24,7 +29,12 @@ router.get("/api/books", async (req, res, next) => {
   }
 });
 
-//return empty array when no books found
+/**
+ * @route    GET /api/book/authors
+ * @description Fetch Authors
+ * @access PUBLIC
+ */
+
 router.get("/api/book/authors", async (req, res, next) => {
   try {
     const authors = await Users.find(
@@ -34,26 +44,38 @@ router.get("/api/book/authors", async (req, res, next) => {
       },
       { firstname: 1, _id: 1 }
     );
+
     return res.status(200).json({ authors });
   } catch (error) {
     res.status(500).json({ error: "Something Went Wrong..." });
   }
 });
 
-//return null when book not found
+/**
+ * @route    GET /api/books/:bookId
+ * @description Fetch book by ID
+ * @access PUBLIC
+ */
+
 router.get("/api/books/:bookId", async (req, res, next) => {
   try {
     const book = await Books.findOne({
       _id: req.params.bookId,
       status: true,
     }).populate("comments.postedBy", "username");
+
     return res.status(200).json({ book });
   } catch (error) {
     res.status(500).json({ error: "Something Went Wrong..." });
   }
 });
 
-//return empty array when no books found
+/**
+ * @route    GET /api/books/author/:userId
+ * @description Fetch books by author ID
+ * @access PUBLIC
+ */
+
 router.get("/api/books/author/:userId", checkRole, async (req, res, next) => {
   var books = [];
 
@@ -73,6 +95,12 @@ router.get("/api/books/author/:userId", checkRole, async (req, res, next) => {
     res.status(500).json({ error: "Something Went Wrong..." });
   }
 });
+
+/**
+ * @route    POST /api/book/:userId
+ * @description Insert new book
+ * @access PRIVATE
+ */
 
 router.post(
   "/api/book/:userId",
@@ -122,6 +150,12 @@ router.post(
   }
 );
 
+/**
+ * @route    PATCH /api/books/:bookId
+ * @description Update book
+ * @access PRIVATE
+ */
+
 router.patch(
   "/api/books/:bookId",
   authCheck,
@@ -141,6 +175,12 @@ router.patch(
     }
   }
 );
+
+/**
+ * @route    DELETE /api/books/:bookId
+ * @description Delete book
+ * @access PRIVATE
+ */
 
 router.delete(
   "/api/books/:bookId",
@@ -162,6 +202,12 @@ router.delete(
     }
   }
 );
+
+/**
+ * @route    PATCH /api/book/comment
+ * @description Insert new comment
+ * @access PRIVATE
+ */
 
 router.patch("/api/book/comment", authCheck, async (req, res, next) => {
   try {
@@ -189,6 +235,12 @@ router.patch("/api/book/comment", authCheck, async (req, res, next) => {
     res.status(500).json({ error: "Something Went Wrong..." });
   }
 });
+
+/**
+ * @route    PATCH /api/book/like
+ * @description Toggle like
+ * @access PRIVATE
+ */
 
 router.patch("/api/book/like", authCheck, async (req, res, next) => {
   try {
@@ -223,6 +275,12 @@ router.patch("/api/book/like", authCheck, async (req, res, next) => {
   }
 });
 
+/**
+ * @route    PATCH /api/book/dislike
+ * @description Toggle dislike
+ * @access PRIVATE
+ */
+
 router.patch("/api/book/dislike", authCheck, async (req, res, next) => {
   try {
     const book = await Books.findById(new ObjectID(req.body.bookId));
@@ -254,6 +312,12 @@ router.patch("/api/book/dislike", authCheck, async (req, res, next) => {
     res.status(500).json({ error: "Something Went Wrong..." });
   }
 });
+
+/**
+ * @route    PATCH /api/book/favourite
+ * @description Toggle favourite
+ * @access PRIVATE
+ */
 
 router.patch("/api/book/favourite", authCheck, async (req, res, next) => {
   try {
@@ -289,6 +353,13 @@ router.patch("/api/book/favourite", authCheck, async (req, res, next) => {
   }
 });
 
+/**
+ * @route    DELETE /api/book/favourite
+ * @description DELETE favourite
+ * @access PRIVATE
+ * NOTE: CURRENTLY NOT IN USED
+ */
+
 router.delete("/api/book/favourite", authCheck, async (req, res, next) => {
   try {
     const book = await Books.findById(new ObjectID(req.body.bookId));
@@ -313,6 +384,12 @@ router.delete("/api/book/favourite", authCheck, async (req, res, next) => {
     res.status(500).json({ error: "Something Went Wrong..." });
   }
 });
+
+/**
+ * @route    PATCH /api/book/read-later
+ * @description Toggle read later
+ * @access PRIVATE
+ */
 
 router.patch("/api/book/read-later", authCheck, async (req, res, next) => {
   try {
@@ -339,6 +416,13 @@ router.patch("/api/book/read-later", authCheck, async (req, res, next) => {
     res.status(500).json({ error: "Something Went Wrong..." });
   }
 });
+
+/**
+ * @route    DELETE /api/book/read-later
+ * @description DELETE read later
+ * @access PRIVATE
+ * NOTE: CURRENTLY NOT IN USED
+ */
 
 router.delete("/api/book/read-later", authCheck, async (req, res, next) => {
   try {

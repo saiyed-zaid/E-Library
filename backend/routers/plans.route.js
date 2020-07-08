@@ -1,12 +1,22 @@
 const express = require("express");
 const router = express.Router();
+
 const User = require("../models/Users");
+
+const authCheck = require("../middlewares/authCheck");
+
 const { ObjectID } = require("mongodb");
 const _ = require("lodash");
 
-router.post("/api/plan/:userId", async (req, res, next) => {
+/**
+ * @route    POST /api/plan/:userId
+ * @description UPDATE user plan
+ * @access PRIVATE
+ */
+
+router.post("/api/plan/:userId", authCheck, async (req, res, next) => {
   try {
-      //Writer Validation Required.
+    //Writer Validation Required.
     const user = await User.findById(new ObjectID(req.params.userId));
 
     if (!user) {

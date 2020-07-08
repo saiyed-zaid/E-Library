@@ -14,7 +14,11 @@ const Books = require("../models/Books");
 
 const { ObjectId } = require("mongodb");
 
-//Fetch Login User Data
+/**
+ * @route    GET /api/user/:userId
+ * @description Fetch auth user
+ * @access PRIVATE
+ */
 
 router.get("/api/user/:userId", authCheck, async (req, res, next) => {
   try {
@@ -52,7 +56,12 @@ router.get("/api/user/:userId", authCheck, async (req, res, next) => {
     res.status(500).json({ error: "Something Went Wrong" });
   }
 });
-//favouriteBook
+
+/**
+ * @route    POST /api/signup
+ * @description Register new user
+ * @access PUBLIC
+ */
 
 router.post(
   "/api/signup",
@@ -140,6 +149,12 @@ router.post(
     }
   }
 );
+
+/**
+ * @route    POST /api/signin
+ * @description Login user
+ * @access PUBLIC
+ */
 
 router.post(
   "/api/signin",
@@ -234,6 +249,12 @@ router.post(
   }
 );
 
+/**
+ * @route    POST /api/social-login
+ * @description Social login user
+ * @access PUBLIC
+ */
+
 router.post("/api/social-login", async (req, res, next) => {
   try {
     let user = await User.findOne({ email: req.body.email });
@@ -278,6 +299,12 @@ router.post("/api/social-login", async (req, res, next) => {
   }
 });
 
+/**
+ * @route    PATCH /api/user/verification
+ * @description User verification
+ * @access PUBLIC
+ */
+
 router.patch("/api/user/verification", async (req, res, next) => {
   try {
     const user = await User.findOne({
@@ -318,6 +345,12 @@ router.patch("/api/user/verification", async (req, res, next) => {
   }
 });
 
+/**
+ * @route    POST /api/forget-password
+ * @description User forget password
+ * @access PUBLIC
+ */
+
 router.post("/api/forget-password", async (req, res, next) => {
   const { username } = req.body;
   try {
@@ -357,6 +390,12 @@ router.post("/api/forget-password", async (req, res, next) => {
     res.status(500).json({ error: "Something Went Wrong" });
   }
 });
+
+/**
+ * @route    PATCH /api/reset-password
+ * @description User reset password
+ * @access PUBLIC
+ */
 
 router.patch(
   "/api/reset-password",
@@ -410,6 +449,12 @@ router.patch(
   }
 );
 
+/**
+ * @route    GET /api/find-user-name/:userName
+ * @description Find usernamee existance
+ * @access PUBLIC
+ */
+
 router.get("/api/find-user-name/:userName", async (req, res, next) => {
   try {
     const user = await User.findOne({ username: req.params.userName });
@@ -421,6 +466,12 @@ router.get("/api/find-user-name/:userName", async (req, res, next) => {
     }
   } catch (error) {}
 });
+
+/**
+ * @route    PATCH /api/send/verification-code
+ * @description Send verification code email
+ * @access PUBLIC
+ */
 
 router.patch("/api/send/verification-code", async (req, res, next) => {
   try {

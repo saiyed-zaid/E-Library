@@ -7,6 +7,12 @@ const monthlyReadingChecker = require("../helper/monthlyReadingCheck");
 const User = require("../models/Users");
 const Books = require("../models/Books");
 
+/**
+ * @route    PATCH /api/user/book/read
+ * @description UPDATE user current reading book
+ * @access PRIVATE
+ */
+
 router.patch("/api/user/book/read", authCheck, async (req, res, next) => {
   try {
     const user = await User.findById(req.auth._id);
@@ -129,7 +135,12 @@ router.patch("/api/user/book/read", authCheck, async (req, res, next) => {
   }
 });
 
-//remove book from current read
+/**
+ * @route    DELETE /api/user/book/read/:bookId
+ * @description DELETE book from user current reading list
+ * @access PRIVATE
+ */
+
 router.delete(
   "/api/user/book/read/:bookId",
   authCheck,
