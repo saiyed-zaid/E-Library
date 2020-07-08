@@ -55,61 +55,55 @@ const Navbar = (props) => {
   return (
     <Header style={{ position: "sticky", top: "0", zIndex: 1, width: "100%" }}>
       <div className="logo" />
-      <Menu
-        theme="dark"
-        mode="horizontal"
-        defaultSelectedKeys={["2"]}
-        style={{ textAlign: "right" }}
-      >
+      <Menu theme="dark" mode="horizontal" style={{ textAlign: "right" }}>
         {props.isLoggedIn && (
-          <Menu.Item>
+          <Menu.Item key="1">
             <Link to="/">Dashboard</Link>
           </Menu.Item>
         )}
 
         {props.isLoggedIn && authUser.role === "writer" && (
-          <Menu.Item>
+          <Menu.Item key="2">
             <Link to="/add-book">Add Book</Link>
           </Menu.Item>
         )}
 
         {props.isLoggedIn && authUser.role === "writer" && (
-          <Menu.Item>
+          <Menu.Item key="3">
             <Link to="/mybooks">My Books</Link>
           </Menu.Item>
         )}
 
         {props.isLoggedIn && authUser.role === "reader" && (
-          <Menu.Item>
+          <Menu.Item key="4">
             <Link to="/search">Search</Link>
           </Menu.Item>
         )}
 
+        {!props.isLoggedIn && (
+          <Menu.Item key="6">
+            <Link to="/signup">Signup</Link>
+          </Menu.Item>
+        )}
+
+        {!props.isLoggedIn && (
+          <Menu.Item key="7">
+            <Link to="/signin">Login</Link>
+          </Menu.Item>
+        )}
+
         {props.isLoggedIn && (
-          <Menu.Item key="3">
+          <Menu.Item key="5">
             <Dropdown overlay={menu}>
               <Avatar
-                style={{ backgroundColor: "#7265e6", verticalAlign: "middle" }}
+                style={{ backgroundColor: "#7265e6" }}
                 size="large"
-                gap={1}
               >
                 {authUser &&
                   authUser.username.charAt(0).toUpperCase() +
                     authUser.username.slice(1)}
               </Avatar>
             </Dropdown>
-          </Menu.Item>
-        )}
-
-        {!props.isLoggedIn && (
-          <Menu.Item key="1">
-            <Link to="/signup">Signup</Link>
-          </Menu.Item>
-        )}
-
-        {!props.isLoggedIn && (
-          <Menu.Item key="2">
-            <Link to="/signin">Login</Link>
           </Menu.Item>
         )}
       </Menu>

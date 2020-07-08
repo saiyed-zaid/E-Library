@@ -17,7 +17,7 @@ import {
   SETBOOKTOREAD,
 } from "./actions/BookActions";
 
-import { LOADING, SUCCESSS } from "./actions/GlobalActions";
+import { LOADING, SUCCESSS, FAILURE } from "./actions/GlobalActions";
 //API RELATED METHODS
 export const signup = (postData) => {
   return async (dispatch) => {
@@ -229,6 +229,7 @@ export const fetchAuthorBooks = (data) => {
       dispatch(GET(response.data.books));
       dispatch(SUCCESSS());
     } catch (error) {
+      message.error(error.response.data.error);
       //ERROR
     }
   };
@@ -303,9 +304,6 @@ export const fetchAuthors = () => {
 export const insertData = (data, token, _id) => {
   return async (dispatch) => {
     try {
-      //LOADING
-      //SUCCESS
-      //dispatch(LOADING());
       const response = await Axios.post(
         `${process.env.REACT_APP_BACKEND_URI}/book/${_id}`,
         data,
@@ -540,9 +538,6 @@ export const updatePlan = (data, _id, token) => {
 export const insertCurrentRead = (data, _id, token) => {
   return async (dispatch) => {
     try {
-      //LOADING
-      //SUCCESS
-      //dispatch(LOADING());
       const response = await Axios.patch(
         `${process.env.REACT_APP_BACKEND_URI}/user/book/read`,
         data,
@@ -593,6 +588,9 @@ export const deleteCurrentRead = (deleteId, _id, token) => {
       }
       //SUCCESS
     } catch (error) {
+      dispatch(FAILURE());
+
+      message.error(error.response.data.error);
       //FAILURE
     }
   };
@@ -618,6 +616,12 @@ export const FetchMostLikedBooks = (_id, token) => {
       dispatch(authUser(response.data));
       dispatch(SUCCESSS());
     } catch (error) {
+      dispatch(FAILURE());
+
+      message.error(error.response.data.error);
+
+      //message.error(error.response.data.error);
+
       //ERROR
     }
   };
@@ -641,6 +645,9 @@ export const FetchMostReadBooks = (_id, token) => {
       dispatch(authUser(response.data));
       dispatch(SUCCESSS());
     } catch (error) {
+      dispatch(FAILURE());
+
+      message.error(error.response.data.error);
       //ERROR
     }
   };

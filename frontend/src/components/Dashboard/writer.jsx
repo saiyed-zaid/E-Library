@@ -45,7 +45,7 @@ const Dashboard = (props) => {
 
   return (
     <>
-      <div className="site-card-wrapper">
+      <div className="site-card-wrapper custom-card-wrapper">
         <h1>Top 3 Liked Books</h1>
         <Row gutter={[16, 16]}>
           {globalState.loading && <Skeleton active />}
@@ -69,6 +69,7 @@ const Dashboard = (props) => {
               return (
                 <Col xs={24} md={8}>
                   <Card
+                    hoverable={true}
                     title={book._id.title}
                     bordered={true}
                     cover={
@@ -114,7 +115,8 @@ const Dashboard = (props) => {
             })}
         </Row>
       </div>
-      <div className="site-card-wrapper">
+
+      <div className="site-card-wrapper custom-card-wrapper">
         <h1>Top 3 Reading Books</h1>
         <Row gutter={[16, 16]}>
           {globalState.loading && <Skeleton active />}
@@ -138,6 +140,7 @@ const Dashboard = (props) => {
               return (
                 <Col xs={24} md={8}>
                   <Card
+                    hoverable={true}
                     title={book._id.title}
                     bordered={true}
                     cover={
@@ -152,7 +155,7 @@ const Dashboard = (props) => {
                       />
                     }
                   >
-                    <p>Cosos Theory</p>
+                    <p>{book._id.description}</p>
                     <Row gutter={24}>
                       <Col span={8}>
                         <Statistic

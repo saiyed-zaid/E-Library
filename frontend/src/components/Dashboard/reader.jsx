@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Fragment } from "react";
 
 import { withRouter } from "react-router-dom";
 
@@ -10,7 +10,7 @@ import {
   Popconfirm,
   Empty,
   Button,
-  message,
+  Typography,
   Skeleton,
 } from "antd";
 import { CloseCircleOutlined, InfoCircleOutlined } from "@ant-design/icons";
@@ -24,6 +24,8 @@ import {
 import { SETBOOKTOREAD } from "../../redux/actions/BookActions";
 
 import { useSelector, useDispatch } from "react-redux";
+
+const { Title, Paragraph } = Typography;
 
 const Dashboard = (props) => {
   const { Content } = Layout;
@@ -99,14 +101,16 @@ const Dashboard = (props) => {
   };
 
   return (
-    <>
-      <div className="site-card-wrapper">
+    <Fragment>
+      <div className="site-card-wrapper custom-card-wrapper">
         <h1>RECOMMENDED FOR YOU</h1>
         {globalState.loading && <Skeleton active />}
 
         {bookSuggetions && bookSuggetions.length <= 0 && (
           <Empty
-            style={{ margin: "auto" }}
+            style={{
+              margin: "auto",
+            }}
             image={Empty.PRESENTED_IMAGE_SIMPLE}
             imageStyle={{
               height: 100,
@@ -125,10 +129,21 @@ const Dashboard = (props) => {
             bookSuggetions.map((book, index) => {
               return (
                 index <= 2 && (
-                  <Col xs={24} md={8}>
+                  <Col xs={24} md={8} key={index}>
                     <Card
-                      bordered={true}
-                      title={book.title}
+                      hoverable="true"
+                      title={
+                        <Button
+                          type="link"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleBookRead(book._id, book.reference);
+                          }}
+                        >
+                          {book.title.charAt(0).toUpperCase() +
+                            book.title.slice(1)}
+                        </Button>
+                      }
                       cover={
                         <Popconfirm
                           title="Do you want to read?"
@@ -153,7 +168,10 @@ const Dashboard = (props) => {
                     >
                       <Row gutter={24}>
                         <Col span={18}>
-                          <p>{book.description}</p>
+                          <Paragraph>
+                            {book.description.charAt(0).toUpperCase() +
+                              book.description.slice(1)}
+                          </Paragraph>
                         </Col>
                         <Col span={4}>
                           <InfoCircleOutlined
@@ -170,7 +188,7 @@ const Dashboard = (props) => {
         </Row>
       </div>
 
-      <div className="site-card-wrapper">
+      <div className="site-card-wrapper custom-card-wrapper">
         <h1>CONTINUE READING</h1>
         {globalState.loading && <Skeleton active />}
 
@@ -195,10 +213,22 @@ const Dashboard = (props) => {
             currentReading.map((book, index) => {
               return (
                 index <= 2 && (
-                  <Col xs={24} md={8}>
+                  <Col xs={24} md={8} key={index}>
                     <Card
+                      hoverable="true"
                       bordered={true}
-                      title={book.book.title}
+                      title={
+                        <Button
+                          type="link"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleBookRead(book.book._id, book.book.reference);
+                          }}
+                        >
+                          {book.book.title.charAt(0).toUpperCase() +
+                            book.book.title.slice(1)}
+                        </Button>
+                      }
                       cover={
                         <Popconfirm
                           title="Do you want to read?"
@@ -221,9 +251,12 @@ const Dashboard = (props) => {
                         </Popconfirm>
                       }
                     >
-                      <Row gutter={24}>
-                        <Col span={18}>
-                          <p>{book.book.description}</p>
+                      <Row gutter={23}>
+                        <Col span={17}>
+                          <p>
+                            {book.book.description.charAt(0).toUpperCase() +
+                              book.book.description.slice(1)}
+                          </p>
                         </Col>
                         <Col span={4}>
                           <InfoCircleOutlined
@@ -255,7 +288,7 @@ const Dashboard = (props) => {
         </Row>
       </div>
 
-      <div className="site-card-wrapper">
+      <div className="site-card-wrapper custom-card-wrapper">
         <h1>FAVORITE BOOKS</h1>
         {globalState.loading && <Skeleton active />}
 
@@ -265,6 +298,9 @@ const Dashboard = (props) => {
             imageStyle={{
               height: 100,
             }}
+            style={{
+              margin: "auto",
+            }}
             description={<span>Search book here...</span>}
           >
             <Button type="dashed" onClick={() => props.history.push("/search")}>
@@ -272,18 +308,27 @@ const Dashboard = (props) => {
             </Button>
           </Empty>
         )}
-        <Row gutter={[16, 16]}>
+        <Row gutter={[16, 16]} style={{ backgroundColor: "rgba(0,0,0,0.03)" }}>
           {!globalState.loading &&
             favouriteBooks &&
             favouriteBooks.map((book, index) => {
               return (
                 index <= 2 && (
-                  <Col xs={24} md={8}>
+                  <Col xs={24} md={8} key={index}>
                     <Card
+                      hoverable="true"
                       bordered={true}
                       title={
-                        book.book.title.charAt(0).toUpperCase() +
-                        book.book.title.slice(1)
+                        <Button
+                          type="link"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleBookRead(book.book._id, book.book.reference);
+                          }}
+                        >
+                          {book.book.title.charAt(0).toUpperCase() +
+                            book.book.title.slice(1)}
+                        </Button>
                       }
                       cover={
                         <Popconfirm
@@ -338,7 +383,7 @@ const Dashboard = (props) => {
         </Row>
       </div>
 
-      <div className="site-card-wrapper">
+      <div className="site-card-wrapper custom-card-wrapper">
         <h1>FROM READ LATER BOOK LIST</h1>
         {globalState.loading && <Skeleton active />}
 
@@ -359,13 +404,23 @@ const Dashboard = (props) => {
           {!globalState.loading &&
             ReadlaterBooks &&
             ReadlaterBooks.length >= 0 &&
-            ReadlaterBooks.map((book) => {
+            ReadlaterBooks.map((book, index) => {
               return (
-                <Col xs={24} md={8}>
+                <Col xs={24} md={8} key={index}>
                   <Card
+                    hoverable="true"
                     bordered={true}
                     title={
-                      book.title.charAt(0).toUpperCase() + book.title.slice(1)
+                      <Button
+                        type="link"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleBookRead(book._id, book.reference);
+                        }}
+                      >
+                        {book.title.charAt(0).toUpperCase() +
+                          book.title.slice(1)}
+                      </Button>
                     }
                     cover={
                       <Popconfirm
@@ -409,7 +464,7 @@ const Dashboard = (props) => {
             })}
         </Row>
       </div>
-    </>
+    </Fragment>
   );
 };
 

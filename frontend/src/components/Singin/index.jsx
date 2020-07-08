@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink, withRouter } from "react-router-dom";
 
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, Row, Col } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 import { GoogleLogin } from "react-google-login";
@@ -75,10 +75,6 @@ const Signin = (props) => {
           />
         </Form.Item>
         <Form.Item>
-          {/* <Form.Item name="remember" valuePropName="checked" noStyle>
-            <Checkbox>Remember me</Checkbox>
-          </Form.Item> */}
-
           <NavLink className="login-form-forgot" to="/forget-password">
             Forgot password
           </NavLink>

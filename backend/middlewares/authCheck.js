@@ -18,7 +18,7 @@ const authCheck = (req, res, next) => {
   } catch (error) {
     console.log(error);
     if (error.name === "TokenExpiredError") {
-      return res.status(401).json({ error: "Token Expired" });
+      return res.status(401).json({ error: "Token Expired, Please Login Again." });
     }
 
     return res.status(401).json({ error: "Token Expired..." });

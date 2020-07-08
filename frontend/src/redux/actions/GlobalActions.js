@@ -9,3 +9,9 @@ export const SUCCESSS = () => {
     type: "SUCCESSS",
   };
 };
+
+export const FAILURE = () => {
+  return {
+    type: "FAILURE",
+  };
+};
