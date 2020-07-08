@@ -59,10 +59,7 @@ router.get("/api/book/authors", async (req, res, next) => {
 
 router.get("/api/books/:bookId", async (req, res, next) => {
   try {
-    const book = await Books.findOne({
-      _id: req.params.bookId,
-      status: true,
-    }).populate("comments.postedBy", "username");
+    const book = req.book;
 
     return res.status(200).json({ book });
   } catch (error) {
@@ -162,7 +159,7 @@ router.patch(
   hasAuthorization,
   async (req, res, next) => {
     try {
-      const book = await Books.findById(new ObjectId(req.params.bookId));
+      const book = req.book;
 
       extend(book, req.body);
 
@@ -188,7 +185,7 @@ router.delete(
   hasAuthorization,
   async (req, res, next) => {
     try {
-      const book = Books.findById(new ObjectId(req.params.bookId));
+      const book = req.book;
 
       if (!book) {
         return res.status(404).json({ error: "Book Not Found" });
@@ -446,6 +443,25 @@ router.delete("/api/book/read-later", authCheck, async (req, res, next) => {
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ error: "Something Went Wrong..." });
+  }
+});
+
+router.param("bookId", async (req, res, next, id) => {
+  try {
+    const book = await Books.findById(new ObjectId(id)).populate(
+      "comments.postedBy",
+      "username"
+    );
+
+    if (!book) {
+      return res.status(404).json({ error: "Book Not Found" });
+    }
+
+    req.book = book;
+
+    next();
+  } catch (error) {
+    res.json({ error: "Something went wrong..." });
   }
 });
 
